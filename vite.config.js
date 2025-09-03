@@ -8,7 +8,7 @@ export default defineConfig({
     host: '192.168.99.3',
     port: 7777
   },
-  base: '/power-plant-twin/',
+  // base: '/power-plant-twin/',
   build: {
     outDir: './docs',
   }

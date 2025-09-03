@@ -6,8 +6,8 @@
  * 自动将代码中的'/assets/'引用转换为兼容GitHub Pages的路径格式
  */
 export const createAssetPathPlugin = () => {
-  // 为GitHub Pages部署设置的基础路径
-  const githubPagesBasePath = '/power-plant-twin/';
+  // 开发环境标志
+  const isDev = process.env.NODE_ENV === 'development';
   
   return {
     name: 'asset-path-resolver',
@@ -18,14 +18,13 @@ export const createAssetPathPlugin = () => {
       // 检查代码中是否包含'/assets/'路径引用
       if (code.includes('/assets/')) {
         // 在开发环境中不做修改
-        if (process.env.NODE_ENV === 'development') {
+        if (isDev) {
           return code;
         }
         
-        // 在生产环境中，将所有'/assets/'路径引用替换为GitHub Pages兼容的路径
-        // 这里我们直接使用固定的基础路径，避免与Vite的base配置冲突
-        const transformedCode = code.replace(/\/assets\//g, `${githubPagesBasePath}assets/`);
-        return transformedCode;
+        // 在生产环境中，将'/assets/'替换为相对路径格式
+        // 这样Vite的base配置才能正确地处理这些路径
+        return code.replace(/\/assets\//g, 'assets/');
       }
       
       return code;
@@ -39,10 +38,10 @@ export const createAssetPathPlugin = () => {
         
         // 处理JS文件中的资源路径
         if (chunk.type === 'chunk' && chunk.code) {
-          // 检查是否还有未处理的'/assets/'路径引用
-          if (chunk.code.includes('/assets/')) {
-            // 在最终的bundle中再次替换，确保所有路径都正确处理
-            chunk.code = chunk.code.replace(/\/assets\//g, `${githubPagesBasePath}assets/`);
+          // 检查是否有硬编码的'/assets/'路径引用
+          if (chunk.code.includes('/assets/') && !isDev) {
+            // 将所有剩余的'/assets/'替换为相对路径格式
+            chunk.code = chunk.code.replace(/\/assets\//g, 'assets/');
           }
         }
       }

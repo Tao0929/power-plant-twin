@@ -14,7 +14,7 @@ const ModelViewerTest = () => {
     obj: '/assets/train_nt_0001.obj',
     mtl: '/assets/train_nt_0001.mtl',
     glb: '/assets/Car_Charger_Speaker_C_0319091353_texture.glb',
-    gltf: '/scene.gltf'
+    gltf: '/assets/scene.gltf'
   }
 
   return (

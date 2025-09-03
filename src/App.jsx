@@ -11,73 +11,9 @@ import MultModelViewer from './components/MultModelViewer'
 import UseThreeReactExample from './components/UseThreeReactExample'
 import MultModelViewerToHook from './components/MultModelViewerToHook'
 import GLTFViewerExample from './components/GLTFViewerExample'
+import Border1 from './components/material/border1'
 
 function App() {
-  // 添加3D翻转效果的CSS样式
-  useEffect(() => {
-    const styleId = 'model-viewer-styles';
-    let styleElement = document.getElementById(styleId);
-    
-    if (!styleElement) {
-      styleElement = document.createElement('style');
-      styleElement.id = styleId;
-      styleElement.textContent = `
-        .model-container {
-          width: 100%;
-          height: 100%;
-          position: relative;
-          perspective: 1500px;
-          transition: transform 0.6s ease-in-out;
-          transform-style: preserve-3d;
-        }
-        
-        .model-container.flipping {
-          transform: rotateY(180deg);
-        }
-        
-        .model-container > div {
-          width: 100%;
-          height: 100%;
-          position: absolute;
-          backface-visibility: hidden;
-          transition: all 0.6s ease-in-out;
-        }
-        
-        /* 增强科技感的额外样式 */
-        .model-container::before {
-          content: '';
-          position: absolute;
-          top: -2px;
-          left: -2px;
-          right: -2px;
-          bottom: -2px;
-          border-radius: 4px;
-          background: linear-gradient(45deg, #00d4ff, transparent, #00d4ff, transparent);
-          z-index: -1;
-          opacity: 0;
-          transition: opacity 0.3s ease;
-          animation: borderRotate 4s linear infinite;
-        }
-        
-        .model-container.flipping::before {
-          opacity: 0.8;
-        }
-        
-        @keyframes borderRotate {
-          0% { background-position: 0 0; }
-          100% { background-position: 300px 300px; }
-        }
-      `;
-      document.head.appendChild(styleElement);
-    }
-    
-    // 清理函数
-    return () => {
-      if (styleElement && document.head.contains(styleElement)) {
-        document.head.removeChild(styleElement);
-      }
-    };
-  }, []);
   
   // const [selectedViewer, setSelectedViewer] = useState('mult')
   const [selectedViewer, setSelectedViewer] = useState('gltf')
@@ -875,7 +811,9 @@ function App() {
           }}>
             <div style={{width: '20vw', height: 'calc(100% - 24px)', display: 'flex', flexDirection: 'column', justifyContent: 'space-around'}}>
               <BorderBox13 style={{height: '30%'}}>
-                <CapsuleChart config={left1Config} style={{width: '100%', height: '100%'}} />
+                {/* <Border1> */}
+                  <CapsuleChart config={left1Config} style={{width: '100%', height: '100%'}} />
+                {/* </Border1> */}
               </BorderBox13>
               <BorderBox10 style={{height: '30%', padding: 12, boxSizing: 'border-box'}}>
                 <FlylineChartEnhanced config={left2Config} style={{width: '100%', height: '100%'}} />

@@ -33,7 +33,12 @@ export default defineConfig({
         // 确保静态资源路径正确
         assetFileNames: 'assets/[name]-[hash][extname]',
         chunkFileNames: 'assets/[name]-[hash].js',
-        entryFileNames: 'assets/[name]-[hash].js'
+        entryFileNames: 'assets/[name]-[hash].js',
+        // 确保所有资源路径都是相对于base的
+        paths: {
+          // 当引用'/@assets/'时，转换为正确的路径
+          '/@assets/': '/power-plant-twin/assets/'
+        }
       }
     }
   }

@@ -10,7 +10,7 @@ export default defineConfig({
   // 使用React插件和我们自定义的资源路径处理插件
   plugins: [
     react(),
-    createAssetPathPlugin({ basePath: '/power-plant-twin/' })
+    createAssetPathPlugin({ basePath: '' })
   ],
   server: {
     host: true, // 使用 true 而不是硬编码的 IP，这样可以在任何网络环境下访问

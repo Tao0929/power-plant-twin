@@ -12,6 +12,14 @@ export default defineConfig({
   build: {
     outDir: './docs', // GitHub Pages 可以从 docs 目录部署
     assetsDir: 'assets', // 确保资源文件路径正确
-    emptyOutDir: true // 构建前清空 docs 目录
+    emptyOutDir: true, // 构建前清空 docs 目录
+    rollupOptions: {
+      output: {
+        // 确保静态资源路径正确
+        assetFileNames: 'assets/[name]-[hash][extname]',
+        chunkFileNames: 'assets/[name]-[hash].js',
+        entryFileNames: 'assets/[name]-[hash].js'
+      }
+    }
   }
 })

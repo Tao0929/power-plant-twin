@@ -4,13 +4,10 @@
 /**
  * 创建资源路径处理插件
  * 自动将代码中的'/assets/'引用转换为兼容GitHub Pages的路径格式
- * 
- * @param {Object} options - 插件选项
- * @param {string} options.basePath - 基础路径（通常留空，让Vite的base配置处理）
  */
-export const createAssetPathPlugin = (options = {}) => {
-  // 获取基础路径配置
-  const basePath = options.basePath || '';
+export const createAssetPathPlugin = () => {
+  // 为GitHub Pages部署设置的基础路径
+  const githubPagesBasePath = '/power-plant-twin/';
   
   return {
     name: 'asset-path-resolver',
@@ -25,16 +22,10 @@ export const createAssetPathPlugin = (options = {}) => {
           return code;
         }
         
-        // 只有当basePath不为空时才进行路径替换
-        // 否则让Vite的base配置来处理路径前缀
-        if (basePath) {
-          const targetPath = basePath.endsWith('/') 
-            ? `${basePath}assets/` 
-            : `${basePath}/assets/`;
-          
-          const transformedCode = code.replace(/\/assets\//g, targetPath);
-          return transformedCode;
-        }
+        // 在生产环境中，将所有'/assets/'路径引用替换为GitHub Pages兼容的路径
+        // 这里我们直接使用固定的基础路径，避免与Vite的base配置冲突
+        const transformedCode = code.replace(/\/assets\//g, `${githubPagesBasePath}assets/`);
+        return transformedCode;
       }
       
       return code;
@@ -50,15 +41,8 @@ export const createAssetPathPlugin = (options = {}) => {
         if (chunk.type === 'chunk' && chunk.code) {
           // 检查是否还有未处理的'/assets/'路径引用
           if (chunk.code.includes('/assets/')) {
-            // 只有当basePath不为空时才进行路径替换
-            // 否则让Vite的base配置来处理路径前缀
-            if (basePath) {
-              const targetPath = basePath.endsWith('/') 
-                ? `${basePath}assets/` 
-                : `${basePath}/assets/`;
-                 
-              chunk.code = chunk.code.replace(/\/assets\//g, targetPath);
-            }
+            // 在最终的bundle中再次替换，确保所有路径都正确处理
+            chunk.code = chunk.code.replace(/\/assets\//g, `${githubPagesBasePath}assets/`);
           }
         }
       }

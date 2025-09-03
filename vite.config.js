@@ -10,7 +10,7 @@ export default defineConfig({
   // 使用React插件和我们自定义的资源路径处理插件
   plugins: [
     react(),
-    createAssetPathPlugin()
+    createAssetPathPlugin({ basePath: '/power-plant-twin/' })
   ],
   server: {
     host: true, // 使用 true 而不是硬编码的 IP，这样可以在任何网络环境下访问
@@ -33,12 +33,7 @@ export default defineConfig({
         // 确保静态资源路径正确
         assetFileNames: 'assets/[name]-[hash][extname]',
         chunkFileNames: 'assets/[name]-[hash].js',
-        entryFileNames: 'assets/[name]-[hash].js',
-        // 确保所有资源路径都是相对于base的
-        paths: {
-          // 当引用'/@assets/'时，转换为正确的路径
-          '/@assets/': '/power-plant-twin/assets/'
-        }
+        entryFileNames: 'assets/[name]-[hash].js'
       }
     }
   }

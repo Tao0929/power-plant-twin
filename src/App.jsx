@@ -811,9 +811,9 @@ function App() {
           }}>
             <div style={{width: '20vw', height: 'calc(100% - 24px)', display: 'flex', flexDirection: 'column', justifyContent: 'space-around'}}>
               <BorderBox13 style={{height: '30%'}}>
-                {/* <Border1> */}
+                <Border1>
                   <CapsuleChart config={left1Config} style={{width: '100%', height: '100%'}} />
-                {/* </Border1> */}
+                </Border1>
               </BorderBox13>
               <BorderBox10 style={{height: '30%', padding: 12, boxSizing: 'border-box'}}>
                 <FlylineChartEnhanced config={left2Config} style={{width: '100%', height: '100%'}} />

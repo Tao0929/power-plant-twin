@@ -2,13 +2,17 @@ import { defineConfig } from 'vite'
 import react from '@vitejs/plugin-react'
 import { resolve } from 'path'
 import { createAssetPathPlugin } from './vite.config.assets-plugin'
+import UnoCSS from 'unocss/vite'
 
+const isDev = process.env.NODE_ENV === 'development';
+console.log({isDev})
 // https://vitejs.dev/config/
 export default defineConfig({
   // 指定public目录，Vite会自动处理其中的静态资源
   publicDir: 'public',
   // 使用React插件和我们自定义的资源路径处理插件
   plugins: [
+    UnoCSS(),
     react(),
     createAssetPathPlugin()
   ],
@@ -23,7 +27,7 @@ export default defineConfig({
       '@assets': resolve(__dirname, 'public/assets')
     }
   },
-  base: '/power-plant-twin/', // 这应该与你的 GitHub 仓库名称一致
+  base: isDev ? './' : '/power-plant-twin/', // 这应该与你的 GitHub 仓库名称一致
   build: {
     outDir: './docs', // GitHub Pages 可以从 docs 目录部署
     assetsDir: 'assets', // 确保资源文件路径正确

@@ -40,7 +40,7 @@ const Border1 = ({
 
   return (
     <div 
-      className="border-material"
+      className="border-material color-red"
       style={{
         // perspective: '1000px',
         // margin: '10px',

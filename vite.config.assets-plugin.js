@@ -1,9 +1,9 @@
 // Vite资源路径处理插件
-// 此插件会帮助处理项目中使用的'/assets/'路径引用
+// 此插件会在构建过程中自动处理代码中的'/assets/'路径引用
 
 /**
  * 创建资源路径处理插件
- * 自动处理代码中使用的'/assets/'路径引用
+ * 自动将代码中的'/assets/'引用转换为兼容GitHub Pages的路径格式
  */
 export const createAssetPathPlugin = () => {
   return {
@@ -22,9 +22,15 @@ export const createAssetPathPlugin = () => {
       
       // 检查代码中是否包含'/assets/'路径引用
       if (code.includes('/assets/')) {
-        // 我们不需要修改代码，因为Vite会自动处理这些路径
-        // 但我们可以在这里添加日志，帮助调试
-        // console.log(`Found asset references in file: ${id}`);
+        // 在开发环境中不做修改
+        if (process.env.NODE_ENV === 'development') {
+          return code;
+        }
+        
+        // 在生产环境中，将所有'/assets/'路径引用替换为'/@assets/'
+        // 这样rollup的paths配置会进一步将其转换为正确的路径
+        const transformedCode = code.replace(/\/assets\//g, '/@assets/');
+        return transformedCode;
       }
       
       return code;
@@ -38,10 +44,10 @@ export const createAssetPathPlugin = () => {
         
         // 处理JS文件中的资源路径
         if (chunk.type === 'chunk' && chunk.code) {
-          // 检查是否包含需要处理的资源路径
+          // 检查是否还有未处理的'/assets/'路径引用
           if (chunk.code.includes('/assets/')) {
-            // 这里不需要修改代码，因为Vite会根据base配置自动处理路径
-            // 但我们可以添加额外的处理逻辑，如果需要
+            // 在最终的bundle中再次替换，确保所有路径都正确处理
+            chunk.code = chunk.code.replace(/\/assets\//g, '/power-plant-twin/assets/');
           }
         }
       }

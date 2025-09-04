@@ -21,7 +21,7 @@ import img6 from '@/assetsFile/img/6st.png'
 import img7 from '@/assetsFile/img/7st.png'
 import mapCenterPoint from '@/assetsFile/img/mapCenterPoint.png'
 import mapPoint from '@/assetsFile/img/mapPoint.png'
-import mapImg from '@/assetsFile/img/map.png'
+import mapImg from '@/assetsFile/img/mapImg.jpg'
 
 function App() {
   // const [selectedViewer, setSelectedViewer] = useState('mult')

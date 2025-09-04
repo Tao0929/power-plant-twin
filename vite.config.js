@@ -3,6 +3,7 @@ import react from '@vitejs/plugin-react'
 import { resolve } from 'path'
 import { createAssetPathPlugin } from './vite.config.assets-plugin'
 import UnoCSS from 'unocss/vite'
+import { fileURLToPath } from 'url'
 
 const isDev = process.env.NODE_ENV === 'development';
 console.log({isDev})
@@ -24,7 +25,8 @@ export default defineConfig({
   resolve: {
     alias: {
       // 为public/assets创建别名，这样可以在代码中使用'@assets/'来引用资源
-      '@assets': resolve(__dirname, 'public/assets')
+      '@assets': resolve(__dirname, 'public/assets'),
+      '@': fileURLToPath(new URL('./src', import.meta.url)),
     }
   },
   base: isDev ? './' : '/power-plant-twin/', // 这应该与你的 GitHub 仓库名称一致

@@ -12,9 +12,18 @@ import UseThreeReactExample from './components/UseThreeReactExample'
 import MultModelViewerToHook from './components/MultModelViewerToHook'
 import GLTFViewerExample from './components/GLTFViewerExample'
 import Border1 from './components/material/border1'
+import img1 from '@/assetsFile/img/1st.png'
+import img2 from '@/assetsFile/img/2st.png'
+import img3 from '@/assetsFile/img/3st.png'
+import img4 from '@/assetsFile/img/4st.png'
+import img5 from '@/assetsFile/img/5st.png'
+import img6 from '@/assetsFile/img/6st.png'
+import img7 from '@/assetsFile/img/7st.png'
+import mapCenterPoint from '@/assetsFile/img/mapCenterPoint.png'
+import mapPoint from '@/assetsFile/img/mapPoint.png'
+import map from '@/assetsFile/img/map.jpg'
 
 function App() {
-  
   // const [selectedViewer, setSelectedViewer] = useState('mult')
   const [selectedViewer, setSelectedViewer] = useState('gltf')
   const [modelPath, setModelPath] = useState('/assets/train_1005_01.obj')
@@ -550,13 +559,13 @@ function App() {
       }
     ],
     img: [
-      'http://datav-react.jiaminghi.com/img/conicalColumnChart/1st.png',
-      'http://datav-react.jiaminghi.com/img/conicalColumnChart/2st.png',
-      'http://datav-react.jiaminghi.com/img/conicalColumnChart/3st.png',
-      'http://datav-react.jiaminghi.com/img/conicalColumnChart/4st.png',
-      'http://datav-react.jiaminghi.com/img/conicalColumnChart/5st.png',
-      'http://datav-react.jiaminghi.com/img/conicalColumnChart/6st.png',
-      'http://datav-react.jiaminghi.com/img/conicalColumnChart/7st.png'
+      img1,
+      img2,
+      img3,
+      img4,
+      img5,
+      img6,
+      img7,
     ],
     showValue: true
   }
@@ -598,7 +607,7 @@ function App() {
           show: true,
         },
         icon: {
-          src: 'http://datav-react.jiaminghi.com/img/flylineChart/mapCenterPoint.png',
+          src: mapCenterPoint,
           width: 30,
           height: 30
         },
@@ -747,13 +756,13 @@ function App() {
     ],
     icon: {
       show: true,
-      src: 'http://datav-react.jiaminghi.com/img/flylineChart/mapPoint.png'
+      src: mapPoint
     },
     text: {
       show: true,
     },
     k: 0.5,
-    bgImgSrc: 'http://datav-react.jiaminghi.com/img/flylineChart/map.jpg'
+    bgImgSrc: map
   }
 
   const left3Config = {

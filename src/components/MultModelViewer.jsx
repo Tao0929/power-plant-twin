@@ -2,10 +2,9 @@
 
 import React, { useEffect, useRef, useState, useCallback, useMemo } from 'react';
 import { Canvas } from '@react-three/fiber';
-import { OrbitControls, useGLTF, useFBX, useTexture } from '@react-three/drei';
+import { Html, OrbitControls, useGLTF, useTexture } from '@react-three/drei';
 import * as THREE from 'three';
-import { OBJLoader } from 'three-stdlib'
-import { MTLLoader } from 'three-stdlib'
+import { OBJLoader, MTLLoader, FBXLoader } from 'three-stdlib';
 import { useControls } from 'leva';
 
 // 模型组件，根据类型渲染不同格式的模型
@@ -36,17 +35,89 @@ const ModelComponent = React.memo(({ type, path, mtlPath, position, rotation, sc
     );
   }
 
-  // FBX 模型
+  // FBX 模型 - 使用THREE.FBXLoader直接实现
   if (type === 'fbx') {
-    const fbx = useFBX(path);
+    const [fbx, setFbx] = useState(null);
+    
     useEffect(() => {
-      if (onLoad) onLoad(fbx);
-    }, [fbx, onLoad]);
-    return (
+      // 使用从three-stdlib导入的FBXLoader加载FBX模型
+      const loader = new FBXLoader();
+      
+      // 添加加载进度回调（可选）
+      const onProgress = (xhr) => {
+        console.log(`FBX模型加载进度: ${Math.round((xhr.loaded / xhr.total) * 100)}%`);
+      };
+      
+      // 添加加载错误回调
+      const onError = (error) => {
+        console.error('FBX模型加载错误:', error);
+      };
+      
+      // 临时重定向console.warn来抑制特定警告
+      const originalWarn = console.warn;
+      console.warn = (...args) => {
+        // 过滤掉ShininessExponent map不支持的警告
+        if (!args[0]?.includes('ShininessExponent map is not supported in three.js')) {
+          originalWarn.apply(console, args);
+        }
+      };
+      
+      // 加载FBX模型
+      loader.load(
+        path,
+        (object) => {
+          // 恢复原始的console.warn
+          console.warn = originalWarn;
+          
+          // 处理材质优化
+          object.traverse((child) => {
+            if (child.isMesh && child.material) {
+              // 可以在这里添加额外的材质处理逻辑
+              // 例如：简化材质或调整属性以提高性能
+              if (child.material.specularMap) {
+                // 可选：完全移除specularMap以避免任何潜在问题
+                // child.material.specularMap = null;
+              }
+            }
+          });
+          
+          setFbx(object);
+          if (onLoad) onLoad(object);
+        },
+        onProgress,
+        (error) => {
+          // 确保在错误情况下也恢复console.warn
+          console.warn = originalWarn;
+          onError(error);
+        }
+      );
+      
+      // 组件卸载时清理资源
+      return () => {
+        // 确保在组件卸载时恢复console.warn
+        console.warn = originalWarn;
+        if (fbx) {
+          fbx.traverse((child) => {
+            if (child.isMesh) {
+              if (child.geometry) child.geometry.dispose();
+              if (child.material) {
+                if (Array.isArray(child.material)) {
+                  child.material.forEach((mat) => mat.dispose());
+                } else {
+                  child.material.dispose();
+                }
+              }
+            }
+          });
+        }
+      };
+    }, [path, onLoad]);
+    
+    return fbx ? (
       <group position={position} rotation={rotation} scale={scale}>
         <primitive object={fbx} />
       </group>
-    );
+    ) : null;
   }
 
   // OBJ+MTL 模型（简化版）
@@ -106,7 +177,65 @@ const ModelComponent = React.memo(({ type, path, mtlPath, position, rotation, sc
 
   return null;
 });
-
+function CoordinateSystem() {
+  // 创建网格组
+  const gridGroup = useMemo(() => {
+    const group = new THREE.Group();
+    
+    // XZ平面网格（地面网格）
+    const xzGrid = new THREE.GridHelper(200, 200, 0x333333, 0x1a1a1a);
+    xzGrid.position.y = -0.01; // 稍微低于原点，避免Z-fighting
+    group.add(xzGrid);
+    
+    // XY平面网格（垂直于Z轴的网格）
+    const xyGrid = new THREE.GridHelper(200, 200, 0x333333, 0x1a1a1a);
+    xyGrid.rotation.z = Math.PI / 2;
+    xyGrid.position.z = -0.01; // 稍微偏移，避免Z-fighting
+    // group.add(xyGrid);
+    
+    // YZ平面网格（垂直于X轴的网格）
+    const yzGrid = new THREE.GridHelper(200, 200, 0x333333, 0x1a1a1a);
+    yzGrid.rotation.x = Math.PI / 2;
+    yzGrid.position.x = -0.01; // 稍微偏移，避免Z-fighting
+    // group.add(yzGrid);
+    
+    return group;
+  }, []);
+  
+  return (
+    <group>
+      {/* 显示网格 */}
+      <primitive object={gridGroup} />
+      
+      {/* X轴 - 红色 */}
+      <mesh position={[5, 0, 0]}>
+        <boxGeometry args={[10, 0.1, 0.1]} />
+        <meshBasicMaterial color="red" />
+      </mesh>
+      <Html position={[10.5, 0, 0]} center>
+        <div style={{ color: 'red', fontSize: '12px', fontWeight: 'bold' }}>X (东)</div>
+      </Html>
+      
+      {/* Y轴 - 绿色 */}
+      <mesh position={[0, 5, 0]}>
+        <boxGeometry args={[0.1, 10, 0.1]} />
+        <meshBasicMaterial color="green" />
+      </mesh>
+      <Html position={[0, 10.5, 0]} center>
+        <div style={{ color: 'green', fontSize: '12px', fontWeight: 'bold' }}>Y (上)</div>
+      </Html>
+      
+      {/* Z轴 - 蓝色 */}
+      <mesh position={[0, 0, 5]}>
+        <boxGeometry args={[0.1, 0.1, 10]} />
+        <meshBasicMaterial color="blue" />
+      </mesh>
+      <Html position={[0, 0, 10.5]} center>
+        <div style={{ color: 'blue', fontSize: '12px', fontWeight: 'bold' }}>Z (北)</div>
+      </Html>
+    </group>
+  )
+}
 // 场景组件
 const ModelScene = React.memo(({ models, onModelsLoaded }) => {
   const [loadedModels, setLoadedModels] = useState([]);
@@ -131,12 +260,13 @@ const ModelScene = React.memo(({ models, onModelsLoaded }) => {
 
   return (
     <>
+      {showAxes && <CoordinateSystem />}
       {/* 环境光 */}
       <ambientLight intensity={ambientIntensity} />
-      {/* 平行光 */}
-      <directionalLight position={[10, 10, 10]} intensity={directionalIntensity} />
-      {/* 点光源 */}
-      <pointLight position={[0, 10, 0]} intensity={0.5} />
+      {/* 平行光 - 调整位置以扩大照射范围 */}
+      <directionalLight position={[20, 40, 20]} intensity={directionalIntensity} />
+      {/* 点光源 - 添加distance和decay属性扩大照射范围 */}
+      <pointLight position={[0, 30, 0]} intensity={100} distance={500} decay={1.5} />
       
       {/* 渲染所有模型 */}
       {models.map((model, index) => (
@@ -162,7 +292,7 @@ const MultModelViewer = React.memo(({
   backgroundColor = '#131323',
   onModelsLoaded,
   orbitControls = true,
-  cameraPosition = [20, 20, 20],
+  cameraPosition = [0, 10, 0],
   cameraTarget = [0, 0, 0]
 }) => {
   // 计算模型中心点（可选功能）
@@ -208,7 +338,8 @@ const MultModelViewer = React.memo(({
             enableZoom={true}
             enableRotate={true}
             minDistance={1}
-            maxDistance={50}
+            maxDistance={100}
+            center={calculateCenterPoint(models)}
           />
         )}
       </Canvas>

@@ -1,4 +1,4 @@
-import { useRef, useState, useEffect } from 'react';
+import React, { useRef, useState, useEffect } from 'react';
 import * as THREE from 'three';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls';
 import { CSS2DRenderer } from 'three/examples/jsm/renderers/CSS2DRenderer';
@@ -7,6 +7,7 @@ import { DRACOLoader } from 'three/examples/jsm/loaders/DRACOLoader';
 import { OBJLoader } from 'three-stdlib';
 import { MTLLoader } from 'three-stdlib';
 import TWEEN from 'three/examples/jsm/libs/tween.module.js';
+import { useControls } from 'leva';
 
 /**
  * React Three.js Hook - 封装了Three.js场景、相机、渲染器、控制器等初始化和管理
@@ -22,12 +23,49 @@ export function useThreeReact(containerRef) {
   const [isReady, setIsReady] = useState(false);
   const [loading, setLoading] = useState(false);
   const [models, setModels] = useState([]);
-  
+  // 用于控制中心点拖动的状态
+  const isSpacePressedRef = useRef(false);
+  const isDraggingRef = useRef(false);
+  const prevMousePosRef = useRef({ x: 0, y: 0 });
+    
   // 新增功能：与Vue版本对齐
   const composers = useRef(new Map());
   const mixers = useRef([]);
   const clock = useRef(new THREE.Clock());
   const renderMixins = useRef(new Map());
+  const ambientLightRef = useRef();
+  const directionalLightRef = useRef();
+  const axesHelperRef = useRef();
+
+  // 光照和坐标轴控制参数
+  const { ambientIntensity, directionalIntensity, showAxes } = useControls({
+    ambientIntensity: { value: 0.6, min: 0, max: 2, step: 0.1 },
+    directionalIntensity: { value: 1, min: 0, max: 3, step: 0.1 },
+    showAxes: true
+  });
+
+  // 监听控制参数变化并应用到场景
+  useEffect(() => {
+    if (ambientLightRef.current) {
+      ambientLightRef.current.intensity = ambientIntensity;
+    }
+  }, [ambientIntensity]);
+
+  useEffect(() => {
+    if (directionalLightRef.current) {
+      directionalLightRef.current.intensity = directionalIntensity;
+    }
+  }, [directionalIntensity]);
+
+  useEffect(() => {
+    if (!sceneRef.current || !axesHelperRef.current) return;
+    
+    if (showAxes) {
+      sceneRef.current.add(axesHelperRef.current);
+    } else {
+      sceneRef.current.remove(axesHelperRef.current);
+    }
+  }, [showAxes]);
 
   useEffect(() => {
     if (!containerRef.current) return;
@@ -90,18 +128,24 @@ export function useThreeReact(containerRef) {
     controlsRef.current.target.set(0, 0, 0);
     
     // 添加基础光照（与项目风格保持一致）
-    const ambientLight = new THREE.AmbientLight(0xffffff, 0.6);
-    sceneRef.current.add(ambientLight);
+    ambientLightRef.current = new THREE.AmbientLight(0xffffff, ambientIntensity);
+    sceneRef.current.add(ambientLightRef.current);
 
-    const directionalLight = new THREE.DirectionalLight(0xffffff, 1);
-    directionalLight.position.set(10, 10, 5);
-    directionalLight.castShadow = true;
-    directionalLight.shadow.mapSize.set(2048, 2048);
-    sceneRef.current.add(directionalLight);
+    directionalLightRef.current = new THREE.DirectionalLight(0xffffff, directionalIntensity);
+    directionalLightRef.current.position.set(10, 10, 5);
+    directionalLightRef.current.castShadow = true;
+    directionalLightRef.current.shadow.mapSize.set(2048, 2048);
+    sceneRef.current.add(directionalLightRef.current);
 
     const pointLight = new THREE.PointLight(0x00d4ff, 0.5);
     pointLight.position.set(0, 10, 0);
     sceneRef.current.add(pointLight);
+
+    // 添加坐标轴辅助器
+    axesHelperRef.current = new THREE.AxesHelper(5);
+    if (showAxes) {
+      sceneRef.current.add(axesHelperRef.current);
+    }
 
     // 窗口大小改变时调整相机和渲染器
     const handleResize = () => {
@@ -115,7 +159,86 @@ export function useThreeReact(containerRef) {
       rendererRef.current.setSize(width, height);
     };
 
+    // 空格键按下事件
+    const handleKeyDown = (event) => {
+      if (event.code === 'Space') {
+        event.preventDefault();
+        isSpacePressedRef.current = true;
+        // 当空格键按下时，改变鼠标样式以提示用户可以拖动
+        if (containerRef.current) {
+          containerRef.current.style.cursor = 'move';
+        }
+      }
+    };
+
+    // 空格键释放事件
+    const handleKeyUp = (event) => {
+      if (event.code === 'Space') {
+        isSpacePressedRef.current = false;
+        isDraggingRef.current = false;
+        // 恢复默认鼠标样式
+        if (containerRef.current) {
+          containerRef.current.style.cursor = 'default';
+        }
+      }
+    };
+
+    // 鼠标按下事件
+    const handleMouseDown = (event) => {
+      if (isSpacePressedRef.current) {
+        event.preventDefault();
+        isDraggingRef.current = true;
+        prevMousePosRef.current = { x: event.clientX, y: event.clientY };
+      }
+    };
+
+    // 鼠标移动事件
+    const handleMouseMove = (event) => {
+      if (isSpacePressedRef.current && isDraggingRef.current && controlsRef.current) {
+        event.preventDefault();
+        
+        const deltaX = event.clientX - prevMousePosRef.current.x;
+        const deltaY = event.clientY - prevMousePosRef.current.y;
+        
+        // 计算移动距离对目标点的影响
+        const target = controlsRef.current.target;
+        const camera = cameraRef.current;
+        const distance = camera.position.distanceTo(target);
+        
+        // 根据相机方向和距离计算移动量
+        const moveX = (deltaX * distance * 0.001);
+        const moveY = -(deltaY * distance * 0.001);
+        
+        // 创建相机的右方向和上方向向量
+        const right = new THREE.Vector3().crossVectors(camera.up, camera.getWorldDirection(new THREE.Vector3())).normalize();
+        const up = new THREE.Vector3().copy(camera.up).normalize();
+        
+        // 应用移动到目标点
+        target.add(right.multiplyScalar(moveX));
+        target.add(up.multiplyScalar(moveY));
+        
+        // 更新控制器
+        controlsRef.current.update();
+        
+        // 更新前一鼠标位置
+        prevMousePosRef.current = { x: event.clientX, y: event.clientY };
+      }
+    };
+
+    // 鼠标释放事件
+    const handleMouseUp = () => {
+      isDraggingRef.current = false;
+    };
+
+    // 添加事件监听器
     window.addEventListener('resize', handleResize);
+    window.addEventListener('keydown', handleKeyDown);
+    window.addEventListener('keyup', handleKeyUp);
+    if (rendererRef.current) {
+      rendererRef.current.domElement.addEventListener('mousedown', handleMouseDown);
+      window.addEventListener('mousemove', handleMouseMove);
+      window.addEventListener('mouseup', handleMouseUp);
+    }
 
     // 动画循环
     const animate = () => {
@@ -155,15 +278,22 @@ export function useThreeReact(containerRef) {
     return () => {
       cancelAnimationFrame(animationIdRef.current);
       window.removeEventListener('resize', handleResize);
+      window.removeEventListener('keydown', handleKeyDown);
+      window.removeEventListener('keyup', handleKeyUp);
+      window.removeEventListener('mousemove', handleMouseMove);
+      window.removeEventListener('mouseup', handleMouseUp);
       
       // 清理DOM元素
       if (containerRef.current) {
         if (rendererRef.current) {
+          rendererRef.current.domElement.removeEventListener('mousedown', handleMouseDown);
           containerRef.current.removeChild(rendererRef.current.domElement);
         }
         if (cssRendererRef.current) {
           containerRef.current.removeChild(cssRendererRef.current.domElement);
         }
+        // 确保恢复默认鼠标样式
+        containerRef.current.style.cursor = 'default';
       }
       
       // 清理模型
@@ -363,6 +493,7 @@ export function useThreeReact(containerRef) {
     controls: controlsRef.current,
     isReady,
     loading,
+    showAxes,
     models,
     composers: composers.current,
     mixers: mixers.current,

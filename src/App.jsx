@@ -10,6 +10,7 @@ import { FullScreenContainer, BorderBox1, BorderBox11, BorderBox10, BorderBox13,
 import MultModelViewer from './components/MultModelViewer'
 import UseThreeReactExample from './components/UseThreeReactExample'
 import MultModelViewerToHook from './components/MultModelViewerToHook'
+import MultiModelThreeReact from './components/MultiModelThreeReact'
 import GLTFViewerExample from './components/GLTFViewerExample'
 import Border1 from './components/material/border1'
 import img1 from '@/assetsFile/img/1st.png'
@@ -22,10 +23,12 @@ import img7 from '@/assetsFile/img/7st.png'
 import mapCenterPoint from '@/assetsFile/img/mapCenterPoint.png'
 import mapPoint from '@/assetsFile/img/mapPoint.png'
 import mapImg from '@/assetsFile/img/mapImg.jpg'
+import { newMultModels } from './config'
 
 function App() {
   // const [selectedViewer, setSelectedViewer] = useState('mult')
-  const [selectedViewer, setSelectedViewer] = useState('gltf')
+  // const [selectedViewer, setSelectedViewer] = useState('gltf')
+  const [selectedViewer, setSelectedViewer] = useState('mult')
   const [modelPath, setModelPath] = useState('/assets/train_1005_01.obj')
   const [mtlPath, setMtlPath] = useState('/assets/train_1005_01.mtl')
   const [isFlipping, setIsFlipping] = useState(false)
@@ -340,7 +343,9 @@ function App() {
       case 'glb':
         return <GLBModelViewer modelPath={'/assets/devices.glb'} />
       case 'mult':
-        return <MultModelViewer models={multModels} orbitControls={true} />
+        return <MultiModelThreeReact models={multModels} />
+        // return <MultModelViewer models={multModels} orbitControls={true} />
+        // return <MultModelViewer models={newMultModels} />
       case 'gltfEnhanced':
         return <GLTFViewerExample />
       case 'universal':
@@ -763,6 +768,7 @@ function App() {
     },
     k: 0.5,
     bgImgSrc: mapImg
+    // bgImgSrc: '/assetsFile/mapImg.jpg'
   }
 
   const left3Config = {
@@ -804,9 +810,10 @@ function App() {
       }
     }
   }, [])
-
+  const [isFullScreen, setIsFullScreen] = useState(false)
   return (
     <div className="App">
+      {!isFullScreen?
       <FullScreenContainer  style={{ backgroundColor: '#131323'}}>
         <BorderBox11 title="多格式3D模型查看器" backgroundColor='#131323'>
           <div style={{ 
@@ -843,7 +850,8 @@ function App() {
                   {/* <ChangeModel /> */}
                 </div>
               </BorderBox8>
-              <BorderBox2 style={{height: '66%',}}>
+              <BorderBox2 style={{height: '66%', position: 'relative'}}>
+                <span  style={{position: 'absolute', top: 0, right: 10}} onClick={() => setIsFullScreen(true)}>全屏</span>
                 <div style={{width: '100%', height: '100%', padding: '24px', boxSizing: 'border-box'}}>
                     {renderSelectedViewer()}
                     {/* <UseThreeReactExample /> */}
@@ -867,7 +875,18 @@ function App() {
             </div>
           </div>
         </BorderBox11>
-      </FullScreenContainer>
+      </FullScreenContainer>:
+      <FullScreenContainer  style={{ backgroundColor: '#131323'}}>
+        <BorderBox11 title="多格式3D模型查看器" backgroundColor='#131323'>
+          <BorderBox2 style={{height: '90%', position: 'relative', top: 80}}>
+            <span style={{position: 'absolute', top: 0, right: 10}} onClick={() => setIsFullScreen(false)}>退出全屏</span>
+            <div style={{width: '100%', height: '100%', padding: '24px', boxSizing: 'border-box'}}>
+                {renderSelectedViewer()}
+                {/* <UseThreeReactExample /> */}
+              </div>
+          </BorderBox2>
+        </BorderBox11>
+      </FullScreenContainer>}
     </div>
   )
 }

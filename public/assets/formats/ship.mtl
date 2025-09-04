@@ -1,0 +1,99 @@
+# Blender MTL File: 'industry.blend'
+# Material Count: 8
+
+newmtl Material
+Ns 250.000000
+Ka 1.000000 1.000000 1.000000
+Kd 0.800000 0.800000 0.800000
+Ks 0.500000 0.500000 0.500000
+Ke 0.000000 0.000000 0.000000
+Ni 1.450000
+d 1.000000
+illum 2
+map_Kd D:\\work\\cgtrader\\yuklendi\\port\\textures\\ship-room_Base_Color.png
+map_Ns D:\\work\\cgtrader\\yuklendi\\port\\textures\\ship-room_Roughness.png
+
+newmtl Material.009
+Ns 250.000000
+Ka 1.000000 1.000000 1.000000
+Kd 0.800000 0.800000 0.800000
+Ks 0.500000 0.500000 0.500000
+Ke 0.000000 0.000000 0.000000
+Ni 1.450000
+d 1.000000
+illum 2
+map_Kd D:\\work\\cgtrader\\yuklendi\\port\\textures\\shipbody_Base_Color.png
+map_Ns D:\\work\\cgtrader\\yuklendi\\port\\textures\\shipbody_Roughness.png
+
+newmtl None
+Ns 500
+Ka 0.8 0.8 0.8
+Kd 0.8 0.8 0.8
+Ks 0.8 0.8 0.8
+d 1
+illum 2
+
+newmtl container1
+Ns 250.000000
+Ka 1.000000 1.000000 1.000000
+Kd 0.800000 0.800000 0.800000
+Ks 0.500000 0.500000 0.500000
+Ke 0.000000 0.000000 0.000000
+Ni 1.450000
+d 1.000000
+illum 2
+map_Kd D:\\work\\cgtrader\\yuklendi\\port\\textures\\container_Base_Color.png
+map_Ns D:\\work\\cgtrader\\yuklendi\\port\\textures\\container_Roughness.png
+refl D:\\work\\cgtrader\\yuklendi\\port\\textures\\container_Metallic.png
+
+newmtl container2
+Ns 250.000000
+Ka 1.000000 1.000000 1.000000
+Kd 0.800000 0.800000 0.800000
+Ks 0.500000 0.500000 0.500000
+Ke 0.000000 0.000000 0.000000
+Ni 1.450000
+d 1.000000
+illum 2
+map_Kd D:\\work\\cgtrader\\yuklendi\\port\\textures\\container2_Base_Color.png
+map_Ns D:\\work\\cgtrader\\yuklendi\\port\\textures\\container2_Roughness.png
+refl D:\\work\\cgtrader\\yuklendi\\port\\textures\\container_Metallic.png
+
+newmtl container3
+Ns 250.000000
+Ka 1.000000 1.000000 1.000000
+Kd 0.800000 0.800000 0.800000
+Ks 0.500000 0.500000 0.500000
+Ke 0.000000 0.000000 0.000000
+Ni 1.450000
+d 1.000000
+illum 2
+map_Kd D:\\work\\cgtrader\\yuklendi\\port\\textures\\container3_Base_Color.png
+map_Ns D:\\work\\cgtrader\\yuklendi\\port\\textures\\container3_Roughness.png
+refl D:\\work\\cgtrader\\yuklendi\\port\\textures\\container_Metallic.png
+
+newmtl container4
+Ns 250.000000
+Ka 1.000000 1.000000 1.000000
+Kd 0.800000 0.800000 0.800000
+Ks 0.500000 0.500000 0.500000
+Ke 0.000000 0.000000 0.000000
+Ni 1.450000
+d 1.000000
+illum 2
+map_Kd D:\\work\\cgtrader\\yuklendi\\port\\textures\\container4_Base_Color.png
+map_Ns D:\\work\\cgtrader\\yuklendi\\port\\textures\\container4_Roughness.png
+refl D:\\work\\cgtrader\\yuklendi\\port\\textures\\container_Metallic.png
+
+newmtl container5
+Ns 250.000000
+Ka 1.000000 1.000000 1.000000
+Kd 0.800000 0.800000 0.800000
+Ks 0.500000 0.500000 0.500000
+Ke 0.000000 0.000000 0.000000
+Ni 1.450000
+d 1.000000
+illum 2
+map_Kd D:\\work\\cgtrader\\yuklendi\\port\\textures\\container5_Base_Color.png
+map_Ns D:\\work\\cgtrader\\yuklendi\\port\\textures\\container5_Roughness.png
+refl D:\\work\\cgtrader\\yuklendi\\port\\textures\\container_Metallic.png

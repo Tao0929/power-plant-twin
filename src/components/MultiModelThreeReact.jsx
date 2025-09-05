@@ -21,7 +21,7 @@ export default function MultiModelThreeReact() {
   const [selectedModels, setSelectedModels] = useState(new Set());
   const [allModelsLoaded, setAllModelsLoaded] = useState(false);
   // 控制悬浮控制面板的显示/隐藏
-  const [showControlPanel, setShowControlPanel] = useState(false);
+  const [showControlPanel, setShowControlPanel] = useState(true);
   // 用于网格和坐标轴的引用
   const gridHelperRef = useRef();
   const axesHelperRef = useRef();
@@ -1653,7 +1653,7 @@ export default function MultiModelThreeReact() {
         )}
         
         {/* 模型切换加载状态 */}
-        {modelSwitchLoading && (
+        {modelSwitchLoading || loading && (
           <div style={{
             position: 'absolute',
             top: '0',
@@ -1671,13 +1671,13 @@ export default function MultiModelThreeReact() {
               color: '#00d4ff'
             }}>
               <Loading />
-              <div style={{
+              {modelSwitchLoading && <div style={{
                 marginTop: '20px',
                 fontSize: '16px',
                 fontWeight: 'bold'
               }}>
                 {isInternalView ? '正在返回外部视角...' : '正在进入内部视角...'}
-              </div>
+              </div>}
             </div>
           </div>
         )}

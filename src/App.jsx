@@ -772,18 +772,18 @@ function App() {
   }
 
   const left3Config = {
-    header: ['列1', '列2', '列3'],
+    header: ['用电量', '电费', '电损耗'],
     data: [
-      ['<span style="color:#37a2da;">行1列1</span>', '行1列2', '行1列3'],
-      ['行2列1', '<span style="color:#32c5e9;">行2列2</span>', '行2列3'],
-      ['行3列1', '行3列2', '<span style="color:#67e0e3;">行3列3</span>'],
-      ['行4列1', '<span style="color:#9fe6b8;">行4列2</span>', '行4列3'],
-      ['<span style="color:#ffdb5c;">行5列1</span>', '行5列2', '行5列3'],
-      ['行6列1', '<span style="color:#ff9f7f;">行6列2</span>', '行6列3'],
-      ['行7列1', '行7列2', '<span style="color:#fb7293;">行7列3</span>'],
-      ['行8列1', '<span style="color:#e062ae;">行8列2</span>', '行8列3'],
-      ['<span style="color:#e690d1;">行9列1</span>', '行9列2', '行9列3'],
-      ['行10列1', '<span style="color:#e7bcf3;">行10列2</span>', '行10列3']
+      ['<span style="color:#37a2da;">13200</span>', '22222', '1332'],
+      ['1234', '<span style="color:#32c5e9;">1111</span>', '412'],
+      ['2323', '33', '<span style="color:#67e0e3;">333</span>'],
+      ['123', '<span style="color:#9fe6b8;">23</span>', '123'],
+      ['<span style="color:#ffdb5c;">123</span>', '41', '412'],
+      ['414', '<span style="color:#ff9f7f;">33</span>', '123'],
+      ['3123', '55', '<span style="color:#fb7293;">33</span>'],
+      ['4412', '<span style="color:#e062ae;">123</span>', '1'],
+      ['<span style="color:#e690d1;">345</span>', '123', '44'],
+      ['412', '<span style="color:#e7bcf3;">123</span>', '123']
     ],
     index: true,
     columnWidth: [50],
@@ -814,7 +814,7 @@ function App() {
   return (
     <div className="App">
       <FullScreenContainer  style={{ backgroundColor: '#131323'}}>
-        <BorderBox11 title="多格式3D模型查看器" backgroundColor='#131323'>
+        <BorderBox11 title="中亿电力采集中心" backgroundColor='#131323'>
           <div style={{ 
             width: '100vw', height: '100vh', 
             display: 'flex', 

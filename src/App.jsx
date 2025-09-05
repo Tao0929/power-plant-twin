@@ -813,7 +813,6 @@ function App() {
   const [isFullScreen, setIsFullScreen] = useState(false)
   return (
     <div className="App">
-      {!isFullScreen?
       <FullScreenContainer  style={{ backgroundColor: '#131323'}}>
         <BorderBox11 title="多格式3D模型查看器" backgroundColor='#131323'>
           <div style={{ 
@@ -825,7 +824,7 @@ function App() {
             padding: '20px 24px',
             boxSizing: 'border-box',
           }}>
-            <div style={{width: '20vw', height: 'calc(100% - 24px)', display: 'flex', flexDirection: 'column', justifyContent: 'space-around'}}>
+            {!isFullScreen && <div style={{width: '20vw', height: 'calc(100% - 24px)', display: 'flex', flexDirection: 'column', justifyContent: 'space-around'}}>
               <BorderBox13 style={{height: '30%'}}>
                 {/* <Border1> */}
                   <CapsuleChart config={left1Config} style={{width: '100%', height: '100%'}} />
@@ -837,9 +836,9 @@ function App() {
               <BorderBox13 style={{height: '30%'}}>
                 <ScrollBoard config={left3Config} style={{width: '100%', height: '100%'}} />
               </BorderBox13>
-            </div>
-            <div style={{width: '50vw', height: 'calc(100% - 48px)', display: 'flex', flexDirection: 'column', justifyContent: 'space-around'}}>
-              <BorderBox8 style={{width: '100%', height: 120, padding: 48, boxSizing: 'border-box',}}>
+            </div>}
+            <div style={{width: isFullScreen ? '100vw' : '50vw', height: 'calc(100% - 48px)', display: 'flex', flexDirection: 'column', justifyContent: 'space-around'}}>
+              {!isFullScreen && <BorderBox8 style={{width: '100%', height: 120, padding: 48, boxSizing: 'border-box',}}>
                 <div style={{ display: 'flex', justifyContent: 'space-around', alignItems: 'center'}}>
                   <Decoration5 style={{width: '20%', height: '40px'}} />
                   {/* <DigitalFlop config={center1Config} style={{width: '60%', height: 50, fontSize: 24}} /> */}
@@ -849,19 +848,18 @@ function App() {
                   <Decoration5 style={{width: '20%', height: '40px'}} />
                   {/* <ChangeModel /> */}
                 </div>
-              </BorderBox8>
-              <BorderBox2 style={{height: '66%', position: 'relative'}}>
-                <span  style={{position: 'absolute', top: 0, right: 10}} onClick={() => setIsFullScreen(true)}>全屏</span>
-                <div style={{width: '100%', height: '100%', padding: '24px', boxSizing: 'border-box'}}>
+              </BorderBox8>}
+              <BorderBox2 style={{height: isFullScreen ? '90%' : '86%', position: 'relative'}}>
+                <span  style={{position: 'absolute', top: 0, right: 20}} onClick={() => setIsFullScreen(isFullScreen ? false : true)}>{isFullScreen ? '收起' : '全屏'}</span>
+                <div style={{width: '100%', height: '100%', padding: '24px', marginTop: 10, boxSizing: 'border-box'}}>
                     {renderSelectedViewer()}
-                    {/* <UseThreeReactExample /> */}
                   </div>
               </BorderBox2>
-              <BorderBox8 reverse={true} style={{width: '100%', height: 120}}>
+              {/* {!isFullScreen && <BorderBox8 reverse={true} style={{width: '100%', height: 120}}>
                 <ModelSelector />
-              </BorderBox8>
+              </BorderBox8>} */}
             </div>
-            <div style={{ padding: 12, boxSizing: 'border-box', width: '20vw', height: 'calc(100% - 24px)', display: 'flex', flexDirection: 'column', justifyContent: 'space-around'}}>
+            {!isFullScreen && <div style={{ padding: 12, boxSizing: 'border-box', width: '20vw', height: 'calc(100% - 24px)', display: 'flex', flexDirection: 'column', justifyContent: 'space-around'}}>
               <BorderBox5 reverse={true} style={{height: '30%',}} className="flex-center customer-ring">
                 <ActiveRingChart config={right1Config} style={{ width: '20vw', height: '100%'}} />
               </BorderBox5>
@@ -872,21 +870,10 @@ function App() {
                 <Decoration3 style={{width: '120px', height: '30px', position: 'relative', top: 37, right: '-55%'}} />
                 <ConicalColumnChart config={right3Config} style={{ width: 'calc(20vw - 128px)', position: 'relative', top: -25, height: '80%', padding: 24, boxSizing: 'border-box'}} />
               </BorderBox5>
-            </div>
+            </div>}
           </div>
         </BorderBox11>
-      </FullScreenContainer>:
-      <FullScreenContainer  style={{ backgroundColor: '#131323'}}>
-        <BorderBox11 title="多格式3D模型查看器" backgroundColor='#131323'>
-          <BorderBox2 style={{height: '90%', position: 'relative', top: 80}}>
-            <span style={{position: 'absolute', top: 0, right: 10}} onClick={() => setIsFullScreen(false)}>退出全屏</span>
-            <div style={{width: '100%', height: '100%', padding: '24px', boxSizing: 'border-box'}}>
-                {renderSelectedViewer()}
-                {/* <UseThreeReactExample /> */}
-              </div>
-          </BorderBox2>
-        </BorderBox11>
-      </FullScreenContainer>}
+      </FullScreenContainer>
     </div>
   )
 }

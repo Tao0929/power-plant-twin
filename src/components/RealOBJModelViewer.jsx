@@ -11,10 +11,10 @@ const models = [
     // 原有模型 - 保持不变
     {
       id: 'substation',
-      path: '/assets/substation_ht_1005_01.obj',
-      mtlPath: '/assets/substation_ht_1005_01.mtl',
-      position: [10, 0, -50],
-      scale: [0.05, 0.05, 0.05],
+        path: '/assets/substation_ht_1005_01.obj',
+        mtlPath: '/assets/substation_ht_1005_01.mtl',
+        position: [10, 0, -50],
+        scale: [0.05, 0.05, 0.05],
       name: '厂区围墙'
     },
     {

@@ -1,7 +1,8 @@
-import React, { useRef, useState, useEffect } from 'react';
+import React, { useRef, useState, useEffect, useCallback, useMemo } from 'react';
 import { useThreeReact } from '../hook/useThreeReact';
 import * as THREE from 'three';
 import { useControls } from 'leva';
+import { Loading } from '@jiaminghi/data-view-react';
 
 /**
  * 使用 useThreeReact hook 渲染多个模型的组件
@@ -9,21 +10,22 @@ import { useControls } from 'leva';
  */
 export default function MultiModelThreeReact() {
   const containerRef = useRef(null);
-  const [loadingProgress, setLoadingProgress] = useState(0);
+  // const [loadingProgress, setLoadingProgress] = useState(0);
   const [totalModels, setTotalModels] = useState(0);
   const [loadedModels, setLoadedModels] = useState(0);
   const [error, setError] = useState(null);
-  const [showGrid, setShowGrid] = useState(true);
+  const [showGrid, setShowGrid] = useState(false);
   // const [showAxes, setShowAxes] = useState(true);
   const [autoRotate, setAutoRotate] = useState(false);
   const [modelConfigs, setModelConfigs] = useState([]);
   const [selectedModels, setSelectedModels] = useState(new Set());
   const [allModelsLoaded, setAllModelsLoaded] = useState(false);
   // 控制悬浮控制面板的显示/隐藏
-  const [showControlPanel, setShowControlPanel] = useState(true);
+  const [showControlPanel, setShowControlPanel] = useState(false);
   // 用于网格和坐标轴的引用
   const gridHelperRef = useRef();
   const axesHelperRef = useRef();
+  const resizeObserverRef = useRef(null);
 
   // 使用 useThreeReact hook
   const {
@@ -42,6 +44,11 @@ export default function MultiModelThreeReact() {
     addRenderMixin,
     removeRenderMixin,
   } = useThreeReact(containerRef);
+
+  const loadingProgress = useMemo(() => {
+    return Number((loadedModels / totalModels) * 100).toFixed(2)
+  }, [loadedModels, totalModels])
+  
 
   const objModel = [
     // 原有模型 - 保持不变
@@ -341,16 +348,7 @@ export default function MultiModelThreeReact() {
     },
   ]
 
-  // 模型配置数据 - 从 App.jsx 中提取
-  const modelData = [
-    
-    // obj 模型
-    ...objModel?.map(i => ({
-      ...i,
-      type: 'obj_mtl'
-    })),
-    
-    // glb 模型
+  const glbObj = [
     {
       id: 'base',
       path: '/assets/base.glb',
@@ -380,6 +378,20 @@ export default function MultiModelThreeReact() {
       name: '线路模型',
       type: 'gltf'
     }
+  ]
+  
+  // 模型配置数据 - 从 App.jsx 中提取
+  const modelData = [
+    // obj 模型
+    ...objModel?.map(i => ({
+      ...i,
+      type: 'obj_mtl'
+    })),
+    // glb 模型
+    // ...glbObj?.map(i => ({
+    //   ...i,
+    //   type: 'glb'
+    // }))
   ];
 
   // 初始化网格和坐标轴
@@ -415,6 +427,8 @@ export default function MultiModelThreeReact() {
     if (controls) {
       controls.autoRotate = autoRotate;
     }
+    // 默认加载全部
+    handleLoadAllModels()
   }, [isReady, showGrid, showAxes, autoRotate, scene, controls]);
 
   // 初始化模型配置
@@ -524,7 +538,7 @@ export default function MultiModelThreeReact() {
       }
       
       setLoadedModels(prev => prev + 1);
-      setLoadingProgress(Math.round((loadedModels + 1) / totalModels * 100));
+      // setLoadingProgress(Math.round((loadedModels + 1) / totalModels * 100));
       
       console.log(`${config.name} 加载成功`);
     } catch (error) {
@@ -537,7 +551,7 @@ export default function MultiModelThreeReact() {
   const handleLoadAllModels = async () => {
     try {
       setError(null);
-      setLoadingProgress(0);
+      // setLoadingProgress(0);
       setLoadedModels(0);
       setAllModelsLoaded(false);
       
@@ -565,7 +579,7 @@ export default function MultiModelThreeReact() {
   const handleLoadSelectedModels = async () => {
     try {
       setError(null);
-      setLoadingProgress(0);
+      // setLoadingProgress(0);
       setLoadedModels(0);
       setAllModelsLoaded(false);
       
@@ -601,7 +615,7 @@ export default function MultiModelThreeReact() {
   };
 
   // 调整相机位置以查看所有模型
-  const adjustCameraForAllModels = () => {
+  const adjustCameraForAllModels = useCallback(() => {
     if (!camera || models.length === 0) return;
     
     // 计算所有模型的包围盒
@@ -634,7 +648,49 @@ export default function MultiModelThreeReact() {
         controls.update();
       }
     }
-  };
+  }, [camera, models, controls]);
+
+  // 监听容器尺寸变化
+  useEffect(() => {
+    if (!containerRef.current || !isReady || !renderer) return;
+
+    // 调整渲染器大小的函数
+    const handleContainerResize = () => {
+      // 调整渲染器大小以匹配容器
+      const width = containerRef.current.clientWidth;
+      const height = containerRef.current.clientHeight;
+      
+      if (renderer && camera) {
+        // 调整相机宽高比
+        camera.aspect = width / height;
+        camera.updateProjectionMatrix();
+        
+        // 调整渲染器大小
+        renderer.setSize(width, height);
+        
+        // 调整相机位置以适应新的容器大小
+        if (models.length > 0) {
+          adjustCameraForAllModels();
+        }
+      }
+    };
+
+    // 创建 ResizeObserver
+    resizeObserverRef.current = new ResizeObserver(handleContainerResize);
+
+    // 开始观察容器尺寸变化
+    resizeObserverRef.current.observe(containerRef.current);
+    
+    // 初始调整一次
+    handleContainerResize();
+
+    // 清理函数
+    return () => {
+      if (resizeObserverRef.current) {
+        resizeObserverRef.current.disconnect();
+      }
+    };
+  }, [isReady, adjustCameraForAllModels, models.length, renderer, camera]);
 
   // 移除所有模型
   const handleRemoveAllModels = () => {
@@ -642,7 +698,7 @@ export default function MultiModelThreeReact() {
       removeModel(model.id);
     });
     setLoadedModels(0);
-    setLoadingProgress(0);
+    // setLoadingProgress(0);
     setAllModelsLoaded(false);
   };
 
@@ -829,6 +885,8 @@ export default function MultiModelThreeReact() {
             ))}
           </div>
         </div>
+      </div> )}
+      
         
         {/* 加载进度 */}
         {loading && (
@@ -856,27 +914,27 @@ export default function MultiModelThreeReact() {
         
         {/* 错误信息 */}
         {error && (
-          <div style={{ color: '#ff3333', fontSize: '12px', marginTop: '8px', width: '100%' }}>
+          <div style={{ color: '#ff3333', fontSize: '12px', marginTop: '24px', width: '100%' }}>
             {error}
           </div>
         )}
         
         {/* 加载完成提示 */}
         {allModelsLoaded && models.length > 0 && !loading && (
-          <div style={{ color: '#00ff00', fontSize: '12px', marginTop: '8px', width: '100%' }}>
+          <div style={{ color: '#00ff00', fontSize: '12px', marginTop: '24px', width: '100%' }}>
             所有模型加载完成！
           </div>
         )}
-      </div> )}
-      
       {/* Three.js 渲染区域 */}
       <div 
         ref={containerRef}
         style={{
           flex: 1,
           width: '100%',
+          height: '100%',
           position: 'relative',
-          backgroundColor: '#000'
+          backgroundColor: '#000',
+          minHeight: '0' // 确保在flex容器中正确计算高度
         }}
       >
         {!isReady && (
@@ -898,7 +956,7 @@ export default function MultiModelThreeReact() {
         onClick={() => setShowControlPanel(!showControlPanel)}
         style={{
           position: 'absolute',
-          top: '10px',
+          top: '24px',
           right: '10px',
           zIndex: 200,
           padding: '8px 12px',
@@ -914,29 +972,6 @@ export default function MultiModelThreeReact() {
       >
         {showControlPanel ? '隐藏控制面板' : '显示控制面板'}
       </button>
-
-      {/* Three.js 渲染区域 */}
-      <div 
-        ref={containerRef}
-        style={{
-          width: '100%',
-          height: '100%',
-          backgroundColor: '#000'
-        }}
-      >
-        {!isReady && (
-          <div style={{
-            position: 'absolute',
-            top: '50%',
-            left: '50%',
-            transform: 'translate(-50%, -50%)',
-            color: '#00d4ff',
-            fontSize: '14px'
-          }}>
-            Three.js 环境初始化中...
-          </div>
-        )}
-      </div>
     </div>
   );
 }

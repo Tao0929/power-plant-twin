@@ -41,7 +41,7 @@ export function useThreeReact(containerRef) {
   const { ambientIntensity, directionalIntensity, showAxes } = useControls({
     ambientIntensity: { value: 0.6, min: 0, max: 2, step: 0.1 },
     directionalIntensity: { value: 1, min: 0, max: 3, step: 0.1 },
-    showAxes: true
+    showAxes: false
   });
 
   // 监听控制参数变化并应用到场景

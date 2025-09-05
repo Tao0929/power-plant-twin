@@ -31,7 +31,8 @@ const MultModelViewer = React.memo(({
     loading,
     loadOBJModel,
     removeModel,
-    setBackgroundColor: setSceneBackgroundColor
+    setBackgroundColor: setSceneBackgroundColor,
+    fitModelsToView
   } = useThreeReact(containerRef);
 
   // 设置背景色
@@ -114,6 +115,16 @@ const MultModelViewer = React.memo(({
         if (onModelsLoaded) {
           onModelsLoaded(loaded);
         }
+        
+        // 模型加载完成后自动调整视角，使所有模型占满可视区域
+        console.log('模型加载完成，准备调整视角');
+        console.log('已加载的模型数量:', loaded.length);
+        
+        // 使用较长的延迟，确保模型完全加载和渲染
+        setTimeout(() => {
+          console.log('调用fitModelsToView调整视角');
+          fitModelsToView(loaded);
+        }, 500);
       } catch (err) {
         console.error('加载模型时发生错误:', err);
         setError('加载模型时发生错误');
@@ -199,15 +210,28 @@ const MultModelViewer = React.memo(({
         </div>
       )}
       
-      {/* 操作提示 */}
+      {/* 操作提示和重置视角按钮 */}
       {isReady && !loading && (
-        <div style={infoPanelStyle}>
-          <ul style={infoListStyle}>
-            <li>🖱️ 左键拖动：旋转视角</li>
-            <li>🖱️ 右键拖动：平移视角</li>
-            <li>🖱️ 滚轮：缩放视角</li>
-          </ul>
-        </div>
+        <>
+          <div style={infoPanelStyle}>
+            <ul style={infoListStyle}>
+              <li>🖱️ 左键拖动：旋转视角</li>
+              <li>🖱️ 右键拖动：平移视角</li>
+              <li>🖱️ 滚轮：缩放视角</li>
+            </ul>
+          </div>
+          
+          {/* 重置视角按钮 */}
+          <button
+            style={resetViewButtonStyle}
+            onClick={() => {
+              console.log('手动触发重置视角');
+              fitModelsToView(loadedModels);
+            }}
+          >
+            重置视角
+          </button>
+        </>
       )}
     </div>
   );
@@ -296,6 +320,23 @@ const infoListStyle = {
   margin: 0,
   paddingLeft: '20px',
   lineHeight: '1.6'
+};
+
+const resetViewButtonStyle = {
+  position: 'absolute',
+  top: '20px',
+  right: '20px',
+  padding: '8px 16px',
+  backgroundColor: 'rgba(0, 212, 255, 0.2)',
+  border: '1px solid #00d4ff',
+  borderRadius: '4px',
+  color: '#00d4ff',
+  fontSize: '12px',
+  cursor: 'pointer',
+  zIndex: 1000,
+  '&:hover': {
+    backgroundColor: 'rgba(0, 212, 255, 0.3)'
+  }
 };
 
 // 添加动画样式

@@ -837,8 +837,8 @@ function App() {
                 <ScrollBoard config={left3Config} style={{width: '100%', height: '100%'}} />
               </BorderBox13>
             </div>}
-            <div style={{width: isFullScreen ? '100vw' : '50vw', height: 'calc(100% - 48px)', display: 'flex', flexDirection: 'column', justifyContent: 'space-around'}}>
-              {!isFullScreen && <BorderBox8 style={{width: '100%', height: 120, padding: 48, boxSizing: 'border-box',}}>
+            <div style={{width: isFullScreen ? '100vw' : '50vw', height: 'calc(100% - 48px)', marginTop: 16, display: 'flex', flexDirection: 'column', justifyContent: 'space-around'}}>
+              {!isFullScreen && <BorderBox8 style={{width: '100%', height: 120, padding: 48, boxSizing: 'border-box', }}>
                 <div style={{ display: 'flex', justifyContent: 'space-around', alignItems: 'center'}}>
                   <Decoration5 style={{width: '20%', height: '40px'}} />
                   {/* <DigitalFlop config={center1Config} style={{width: '60%', height: 50, fontSize: 24}} /> */}
@@ -849,8 +849,8 @@ function App() {
                   {/* <ChangeModel /> */}
                 </div>
               </BorderBox8>}
-              <BorderBox2 style={{height: isFullScreen ? '90%' : '86%', position: 'relative'}}>
-                <span  style={{position: 'absolute', top: 0, right: 20}} onClick={() => setIsFullScreen(isFullScreen ? false : true)}>{isFullScreen ? '收起' : '全屏'}</span>
+              <BorderBox2 style={{height: isFullScreen ? 'calc(100% - 20px)' : '82%', position: 'relative', top: isFullScreen ? 0 : 0}}>
+                <span style={{position: 'absolute', top: 0, right: 20, cursor: 'pointer'}} onClick={() => setIsFullScreen(isFullScreen ? false : true)}>{isFullScreen ? '收起' : '全屏'}</span>
                 <div style={{width: '100%', height: '100%', padding: '24px', marginTop: 10, boxSizing: 'border-box'}}>
                     {renderSelectedViewer()}
                   </div>

@@ -1,4 +1,4 @@
-import React, { useRef, useState, useEffect } from 'react';
+import React, { useRef, useState, useEffect, useCallback } from 'react';
 import * as THREE from 'three';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls';
 import { CSS2DRenderer } from 'three/examples/jsm/renderers/CSS2DRenderer';
@@ -39,8 +39,8 @@ export function useThreeReact(containerRef) {
 
   // 光照和坐标轴控制参数
   const { ambientIntensity, directionalIntensity, showAxes } = useControls({
-    ambientIntensity: { value: 0.6, min: 0, max: 2, step: 0.1 },
-    directionalIntensity: { value: 1, min: 0, max: 3, step: 0.1 },
+    ambientIntensity: { value: 1.2, min: 0, max: 2, step: 0.1 },
+    directionalIntensity: { value: 2, min: 0, max: 3, step: 0.1 },
     showAxes: false
   });
 
@@ -78,12 +78,12 @@ export function useThreeReact(containerRef) {
 
     // 初始化相机
     cameraRef.current = new THREE.PerspectiveCamera(
-      60, // 视野角度
+      90, // 进一步增大视野角度，最大化模型显示尺寸
       containerRef.current.clientWidth / containerRef.current.clientHeight, // 宽高比
       0.1, // 近平面
       1000 // 远平面
     );
-    cameraRef.current.position.set(-20, 20, 15); // 初始位置
+    cameraRef.current.position.set(-15, 80, 15); // 提高Y轴位置，使初始化视图更居中
     cameraRef.current.lookAt(0, 0, 0); // 看向原点
 
     // 初始化渲染器
@@ -125,7 +125,7 @@ export function useThreeReact(containerRef) {
     controlsRef.current.maxDistance = 100;
     controlsRef.current.autoRotate = false;
     controlsRef.current.autoRotateSpeed = 0.5;
-    controlsRef.current.target.set(0, 0, 0);
+    controlsRef.current.target.set(0, 20, 0);
     
     // 添加基础光照（与项目风格保持一致）
     ambientLightRef.current = new THREE.AmbientLight(0xffffff, ambientIntensity);
@@ -355,7 +355,8 @@ export function useThreeReact(containerRef) {
       sceneRef.current.add(object.scene);
       
       // 更新模型列表
-      const model = { id: Date.now(), path: url, object: object.scene, name: url.split('/').pop() || 'GLTF Model' };
+      const model = { id: Date.now(), modelType: 'gltf', path: url, object: object.scene, name: url.split('/').pop() || 'GLTF Model' };
+      console.log({model})
       setModels(prevModels => [...prevModels, model]);
       
       return object;
@@ -398,7 +399,8 @@ export function useThreeReact(containerRef) {
       sceneRef.current.add(object);
       
       // 更新模型列表
-      const model = { id: Date.now(), path, object, name };
+      const model = { id: Date.now(), path, object, name, modelType: 'obj', };
+      console.log({model})
       setModels(prevModels => [...prevModels, model]);
       
       return model;
@@ -485,6 +487,77 @@ export function useThreeReact(containerRef) {
     renderMixins.current.delete(key);
   };
   
+  /**
+   * 调整相机位置和缩放，使所有模型完全显示在可视区域内
+   * @param {Array} modelsToFit - 要适配的模型数组，如果为空则使用当前所有模型
+   * @param {Number} padding - 额外的边距比例，默认为0.2（20%）
+   */
+  const fitModelsToView = useCallback((modelsToFit = models, padding = 0.2) => {
+    if (!cameraRef.current || !controlsRef.current || (!modelsToFit || modelsToFit.length === 0)) {
+      console.log('FitModelsToView: 相机、控制器或模型为空，无法调整视角');
+      return;
+    }
+
+    // 计算所有模型的包围盒
+    const boundingBox = new THREE.Box3();
+    
+    modelsToFit.forEach((model) => {
+      if (model && model.object) {
+        // 创建模型的临时包围盒
+        const modelBox = new THREE.Box3().setFromObject(model.object);
+        // 合并到总包围盒
+        boundingBox.union(modelBox);
+      }
+    });
+
+    // 检查包围盒是否有效
+    if (boundingBox.isEmpty()) {
+      console.warn('无法计算模型包围盒，可能模型尚未完全加载');
+      return;
+    }
+
+    // 计算包围盒的中心
+    const center = boundingBox.getCenter(new THREE.Vector3());
+    
+    // 计算包围盒的尺寸
+    const size = boundingBox.getSize(new THREE.Vector3());
+    
+    // 计算包围盒的对角线长度，用于确定相机距离
+    const diagonal = size.length();
+    
+    // 根据相机的视野角度和包围盒大小计算合适的相机距离
+    const fov = cameraRef.current.fov * (Math.PI / 180); // 转换为弧度
+    const distance = diagonal / (2 * Math.tan(fov / 2)) * (1 + padding);
+    
+    // 设置相机位置（使用固定的方向向量，从上方以45度角俯视，确保视角稳定）
+    const fixedDirection = new THREE.Vector3(-1, 1, -1).normalize(); // 左上后方视角
+    const newPosition = new THREE.Vector3().copy(center).add(fixedDirection.multiplyScalar(distance));
+    
+    console.log('FitModelsToView: 计算结果');
+    console.log('  中心点:', center);
+    console.log('  包围盒尺寸:', size);
+    console.log('  对角线长度:', diagonal);
+    console.log('  相机距离:', distance);
+    console.log('  固定方向:', fixedDirection);
+    console.log('  新相机位置:', newPosition);
+    
+    // 更新相机位置和目标
+    cameraRef.current.position.copy(newPosition);
+    controlsRef.current.target.copy(center);
+    controlsRef.current.update();
+    
+    console.log('FitModelsToView: 相机位置已更新');
+    console.log('  更新后的相机位置:', cameraRef.current.position);
+    console.log('  更新后的控制器目标:', controlsRef.current.target);
+    
+    // 更新相机近平面和远平面，确保所有内容都在视锥体内
+    const near = distance - diagonal / 2;
+    const far = distance + diagonal / 2;
+    cameraRef.current.near = Math.max(0.1, near);
+    cameraRef.current.far = Math.max(far, 1000);
+    cameraRef.current.updateProjectionMatrix();
+  }, [models]);
+
   return {
     scene: sceneRef.current,
     camera: cameraRef.current,
@@ -506,6 +579,7 @@ export function useThreeReact(containerRef) {
     removeMixer,
     addRenderMixin,
     removeRenderMixin,
-    TWEEN
+    TWEEN,
+    fitModelsToView
   };
 }

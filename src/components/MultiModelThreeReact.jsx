@@ -16,7 +16,7 @@ export default function MultiModelThreeReact() {
   const [loadedModels, setLoadedModels] = useState(0);
   const [error, setError] = useState(null);
   const [showGrid, setShowGrid] = useState(false);
-  const [autoRotate, setAutoRotate] = useState(false);
+  const [autoRotate, setAutoRotate] = useState(true);
   const [modelConfigs, setModelConfigs] = useState([]);
   const [selectedModels, setSelectedModels] = useState(new Set());
   const [allModelsLoaded, setAllModelsLoaded] = useState(false);
@@ -75,9 +75,10 @@ export default function MultiModelThreeReact() {
     addRenderMixin,
     removeRenderMixin,
   } = useThreeReact(containerRef);
-  
+
   // 相机自动绕模型一周并聚焦到中心点的函数
-  const cameraOrbitAndFocus = useCallback(() => {
+  const cameraOrbitAndFocus = useCallback(async () => {
+    console.log('相机聚焦')
     if (!camera || !controls || models.length === 0) return;
     
     // 先取消任何正在进行的动画
@@ -104,8 +105,9 @@ export default function MultiModelThreeReact() {
       const maxDim = Math.max(size.x, size.y, size.z);
       const fov = camera.fov * (Math.PI / 180);
       let cameraZ = Math.abs(maxDim / 2 / Math.tan(fov / 2));
-      cameraZ *= 0.7; // 调整相机距离，使模型显示适中
-      
+      cameraZ *= 1.25; // 调整相机距离，使模型显示适中
+      console.log({cameraZ})
+      cameraZ = cameraZ - 20
       // 获取相机当前位置
       const startPosition = camera.position.clone();
       
@@ -125,10 +127,10 @@ export default function MultiModelThreeReact() {
         // 根据当前进度计算相机新位置（围绕Y轴旋转）
         const newX = center.x + cameraZ * Math.sin(rotationProgress);
         const newZ = center.z + cameraZ * Math.cos(rotationProgress);
-        const newY = center.y + cameraZ / 2;
+        const newY = center.y + cameraZ / 1.5;
         
         // 更新相机位置
-        camera.position.set(newX, newY, newZ);
+        camera.position.set(newX - 10, newY, newZ + 20);
         camera.lookAt(center);
         
         // 如果动画未完成，继续请求下一帧
@@ -519,9 +521,48 @@ export default function MultiModelThreeReact() {
 
     // 添加网格地面
     if (showGrid && !gridHelperRef.current) {
-      gridHelperRef.current = new THREE.GridHelper(200, 200, '#00d4ff', '#333333');
-      gridHelperRef.current.position.set(0, -0.01, 0); // 略微低于地面
+      // 创建网格辅助器，使用高科技蓝色作为主颜色
+      gridHelperRef.current = new THREE.GridHelper(60, 50, '#00d4ff', '#333333');
+      gridHelperRef.current.position.set(0, -2, 0); // 略微低于地面
       scene.add(gridHelperRef.current);
+      
+      // 添加网格闪烁效果
+      if (addRenderMixin && gridHelperRef.current.material) {
+        // 存储原始颜色
+        const originalMainColor = new THREE.Color('#00d4ff');
+        const originalMinorColor = new THREE.Color('#333333');
+        
+        // 创建渲染混入函数，实现网格闪烁效果
+        addRenderMixin('gridFlickerEffect', (deltaTime) => {
+          if (!gridHelperRef.current || !gridHelperRef.current.material) return;
+          
+          // 计算闪烁因子，使用正弦函数产生周期性变化
+          const flickerFactor = 0.5 + 0.5 * Math.sin(Date.now() * 0.002);
+          
+          // 应用到主要线条颜色（高亮线）
+          const highlightColor = new THREE.Color(
+            Math.min(originalMainColor.r + flickerFactor * 0.2, 1),
+            Math.min(originalMainColor.g + flickerFactor * 0.3, 1),
+            Math.min(originalMainColor.b + flickerFactor * 0.1, 1)
+          );
+          
+          // 应用到次要线条颜色
+          const minorColor = new THREE.Color(
+            Math.min(originalMinorColor.r + flickerFactor * 0.1, 1),
+            Math.min(originalMinorColor.g + flickerFactor * 0.2, 1),
+            Math.min(originalMinorColor.b + flickerFactor * 0.3, 1)
+          );
+          
+          // 更新网格材质颜色
+          if (Array.isArray(gridHelperRef.current.material)) {
+            gridHelperRef.current.material[0].color.copy(highlightColor);
+            gridHelperRef.current.material[1].color.copy(minorColor);
+          } else {
+            // 某些Three.js版本可能使用单一材质
+            gridHelperRef.current.material.color.copy(highlightColor);
+          }
+        });
+      }
     }
 
     // 添加坐标轴
@@ -533,6 +574,10 @@ export default function MultiModelThreeReact() {
     // 移除网格地面
     if (!showGrid && gridHelperRef.current) {
       scene.remove(gridHelperRef.current);
+      // 移除渲染混入函数
+      if (removeRenderMixin) {
+        removeRenderMixin('gridFlickerEffect');
+      }
       gridHelperRef.current = null;
     }
 
@@ -751,7 +796,7 @@ export default function MultiModelThreeReact() {
       
       // 执行相机动画，移动到内部视角
       await animateCameraToInternal();
-      
+      console.log('===============')
       // 动画完成后显示模型
       Object.values(currentGlbModelsRef.current).forEach(({ object }) => {
         if (object && object.scene) {
@@ -875,6 +920,7 @@ export default function MultiModelThreeReact() {
   
   // 相机动画：移动回外部视角
   const animateCameraToExternal = () => {
+    console.log('--------------')
     return new Promise((resolve) => {
       if (!camera || !controls || !externalCameraPositionRef.current) return resolve();
       
@@ -1043,7 +1089,6 @@ export default function MultiModelThreeReact() {
     const timer = setTimeout(() => {
       console.log('检查模型加载状态，当前models长度:', models.length);
       console.log('当前totalModels:', totalModels);
-      
       // 如果models为空但应该有模型，尝试重新加载
       if (models.length === 0 && totalModels > 0 && isReady && !isLoadingModels) {
         console.log('检测到models为空，尝试重新加载所有模型');
@@ -1186,36 +1231,37 @@ export default function MultiModelThreeReact() {
   const adjustCameraForAllModels = useCallback(() => {
     if (!camera || models.length === 0) return;
     
-    // 计算所有模型的包围盒
-    const box = new THREE.Box3();
+    // // 计算所有模型的包围盒
+    // const box = new THREE.Box3();
     
-    models.forEach(model => {
-      if (model && model.object) {
-        box.expandByObject(model.object);
-      }
-    });
+    // models.forEach(model => {
+    //   if (model && model.object) {
+    //     box.expandByObject(model.object);
+    //   }
+    // });
     
-    // 如果包围盒有效，调整相机位置
-    if (box.min.x !== Infinity) {
-      const size = box.getSize(new THREE.Vector3());
-      const center = box.getCenter(new THREE.Vector3());
+    // // 如果包围盒有效，调整相机位置
+    // if (box.min.x !== Infinity) {
+    //   const size = box.getSize(new THREE.Vector3());
+    //   const center = box.getCenter(new THREE.Vector3());
       
-      // 计算合适的相机距离
-      const maxDim = Math.max(size.x, size.y, size.z);
-      const fov = camera.fov * (Math.PI / 180);
-      let cameraZ = Math.abs(maxDim / 2 / Math.tan(fov / 2));
-      cameraZ *= 0.7; // 调整相机距离，使模型显示适中 (从0.5调整为0.7，向后调整)
+    //   // 计算合适的相机距离
+    //   const maxDim = Math.max(size.x, size.y, size.z);
+    //   const fov = camera.fov * (Math.PI / 180);
+    //   let cameraZ = Math.abs(maxDim / 2 / Math.tan(fov / 2));
+    //   cameraZ *= 0.7; // 调整相机距离，使模型显示适中 (从0.5调整为0.7，向后调整)
       
-      // 设置相机位置和目标
-      camera.position.set(center.x + cameraZ, center.y + cameraZ / 2, center.z + cameraZ);
-      camera.lookAt(center);
+    //   // 设置相机位置和目标
+    //   camera.position.set(center.x + cameraZ, center.y + cameraZ / 2, center.z + cameraZ);
+    //   camera.lookAt(center);
       
-      // 更新控制器目标
-      if (controls) {
-        controls.target.set(center.x, center.y, center.z);
-        controls.update();
-      }
-    }
+    //   // 更新控制器目标
+    //   if (controls) {
+    //     controls.target.set(center.x, center.y, center.z);
+    //     controls.update();
+    //   }
+    // }
+    controls.update();
   }, [camera, models, controls]);
 
   // 监听相机控制变化，保存用户调整后的相机位置
@@ -1246,6 +1292,7 @@ export default function MultiModelThreeReact() {
     
     // 更新控制器目标点
     controls.target.set(centerPoint.x, centerPoint.y, centerPoint.z);
+    console.log({controls})
     controls.update();
     
   }, [isReady, controls, centerPoint]);
@@ -1254,7 +1301,7 @@ export default function MultiModelThreeReact() {
   useEffect(() => {
     if (allModelsLoaded && models.length > 0) {
       // 延迟一小段时间，确保模型完全加载和渲染
-      const timer = setTimeout(() => {
+      const timer = setTimeout(async () => {
         cameraOrbitAndFocus();
       }, 500);
       
@@ -1612,7 +1659,16 @@ export default function MultiModelThreeReact() {
           </div>
         </div>
       )}
-      
+      {loadingProgress==0 && <div style={{
+          flex: 1,
+          width: '100%',
+          height: '100%',
+          position: 'relative',
+          backgroundColor: 'transparent',
+          minHeight: '0' // 确保在flex容器中正确计算高度
+        }}>
+        <Loading />
+      </div>}
       {/* 错误信息 */}
       {error && (
         <div style={{ color: '#ff3333', fontSize: '12px', marginTop: '0px', width: '100%' }}>
@@ -1635,7 +1691,7 @@ export default function MultiModelThreeReact() {
           width: '100%',
           height: '100%',
           position: 'relative',
-          backgroundColor: '#000',
+          backgroundColor: 'transparent',
           minHeight: '0' // 确保在flex容器中正确计算高度
         }}
       >
@@ -1712,7 +1768,7 @@ export default function MultiModelThreeReact() {
       </div>
       
       {/* 控制面板切换按钮 */}
-      <button
+      {/* <button
         onClick={() => setShowControlPanel(!showControlPanel)}
         style={{
           position: 'absolute',
@@ -1731,7 +1787,7 @@ export default function MultiModelThreeReact() {
         }}
       >
         {showControlPanel ? '隐藏控制面板' : '显示控制面板'}
-      </button>
+      </button> */}
     </div>
   );
 }

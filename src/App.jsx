@@ -849,12 +849,14 @@ function App() {
                   {/* <ChangeModel /> */}
                 </div>
               </BorderBox8>}
-              <BorderBox2 style={{height: isFullScreen ? 'calc(100% - 20px)' : '82%', position: 'relative', top: isFullScreen ? 0 : 0}}>
-                <span style={{position: 'absolute', top: 0, right: 20, cursor: 'pointer'}} onClick={() => setIsFullScreen(isFullScreen ? false : true)}>{isFullScreen ? '收起' : '全屏'}</span>
-                <div style={{width: '100%', height: '100%', padding: '24px', marginTop: 10, boxSizing: 'border-box'}}>
-                    {renderSelectedViewer()}
-                  </div>
-              </BorderBox2>
+              <BorderBox8 style={{height: isFullScreen ? 'calc(100% - 20px)' : '82%', position: 'relative', top: isFullScreen ? 0 : 0}}>
+                {/* <BorderBox2> */}
+                  <span style={{position: 'absolute', top: 0, right: 20, cursor: 'pointer'}} onClick={() => setIsFullScreen(isFullScreen ? false : true)}>{isFullScreen ? '收起' : '全屏'}</span>
+                  <div style={{width: '100%', height: '100%', padding: '24px', marginTop: 10, boxSizing: 'border-box'}}>
+                      {renderSelectedViewer()}
+                    </div>
+                  {/* </BorderBox2> */}
+              </BorderBox8>
               {/* {!isFullScreen && <BorderBox8 reverse={true} style={{width: '100%', height: 120}}>
                 <ModelSelector />
               </BorderBox8>} */}

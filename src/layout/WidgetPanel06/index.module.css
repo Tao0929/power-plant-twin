@@ -1,0 +1,71 @@
+@keyframes rowOut {
+  from {
+    top: 0;
+  }
+  to {
+    top: -36px;
+  }
+}
+
+.wrap {
+  height: 100%;
+  overflow: hidden;
+}
+.itemList {
+    display: flex;
+    flex-direction: column;
+    grid-gap: 8px;
+    width: 100%;
+    /* height: 100%;
+    overflow: auto; */
+    height: 670px;
+}
+.itemListScroll {
+    position: relative;
+    animation: rowOut 1s linear forwards;
+    /* &:first-child {
+        opacity: 0;
+        transition: opacity 1s;
+    } */
+}
+
+.itemListScroll .itemBox:first-child {
+    opacity: 0;
+    transition: opacity 1s;
+}
+
+/* .itemBox .error {
+    background: linear-gradient(90deg, #e38d7022, transparent);
+} */
+.itemCircle {
+    position: absolute;
+    left: 10px;
+    width: 5px;
+    height: 10px;
+    background-color: #74fabd;
+}
+.itemName {
+    width: 30%;
+    padding-left: 15px;
+}
+.itemType {
+    width: 30%;
+}
+.itemTime {
+    width: 60%;
+    text-align: end;
+}
+.itemBox {
+    position: relative;
+    display: flex;
+    align-items: center;
+    padding: 5px;
+    font-size: 16px;
+    background: linear-gradient(90deg, #74fabd22, transparent);
+    &.error {
+        background: linear-gradient(90deg, #e38d7022, transparent);
+    }
+}
+.itemCircleError {
+    background-color: #e38d70;
+}

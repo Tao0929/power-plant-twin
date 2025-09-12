@@ -1,0 +1,33 @@
+.layoutPanel {
+    position: relative;
+    height: 100%;
+    color: #fff;
+    background-image: url('@/assetsFile/images/panel_body_bg.png');
+    background-repeat: no-repeat;
+    background-size: 100% 100%;
+}
+
+.panelHeader {
+    display: flex;
+    align-items: center;
+    height: 65px;
+    font-family: DouyuFont;
+    background-image: url('@/assetsFile/images/panel_title_bg.png');
+    background-repeat: no-repeat;
+    background-size: 100% 100%;
+}
+
+.panelHeaderTitle {
+    position: relative;
+    top: -12px;
+    left: 70px;
+    font-size: 20px;
+    font-family: SarasaMonoSC;
+}
+
+.panelBody {
+    box-sizing: border-box;
+    height: calc(100% - 65px);
+    padding: 0 10px 10px;
+    overflow: hidden;
+}

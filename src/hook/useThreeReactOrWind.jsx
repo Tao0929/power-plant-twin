@@ -27,7 +27,7 @@ import { useControls } from 'leva';
  * @param {React.RefObject} containerRef - 用于挂载Three.js渲染器的DOM容器引用
  * @returns {Object} Three.js场景管理对象，包含场景、相机、渲染器等实例和控制方法
  */
-export function useThreeReact(containerRef) {
+export function useThreeReactOrWind(containerRef) {
   // Three.js核心对象引用
   const sceneRef = useRef(); // 3D场景引用
   const cameraRef = useRef(); // 相机引用
@@ -58,11 +58,8 @@ export function useThreeReact(containerRef) {
   const axesHelperRef = useRef(); // 坐标轴辅助器引用
 
   // 使用leva库提供的控制面板参数
-  const { ambientIntensity, directionalIntensity, showAxes } = {
-    ambientIntensity: 1.5,
-    directionalIntensity: 2.5,
-    showAxes: false,
-  }
+  const ambientIntensity = 1.6
+  const directionalIntensity = 2.5
   // const { ambientIntensity, directionalIntensity, showAxes } = useControls({
   //   ambientIntensity: { value: 1.2, min: 0, max: 2, step: 0.1 }, // 环境光强度
   //   directionalIntensity: { value: 2, min: 0, max: 3, step: 0.1 }, // 方向光强度
@@ -84,15 +81,15 @@ export function useThreeReact(containerRef) {
   }, [directionalIntensity]);
 
   // 监听是否显示坐标轴辅助器的变化
-  useEffect(() => {
-    if (!sceneRef.current || !axesHelperRef.current) return;
+  // useEffect(() => {
+  //   if (!sceneRef.current || !axesHelperRef.current) return;
     
-    if (showAxes) {
-      sceneRef.current.add(axesHelperRef.current);
-    } else {
-      sceneRef.current.remove(axesHelperRef.current);
-    }
-  }, [showAxes]);
+  //   if (showAxes) {
+  //     sceneRef.current.add(axesHelperRef.current);
+  //   } else {
+  //     sceneRef.current.remove(axesHelperRef.current);
+  //   }
+  // }, [showAxes]);
 
   // 初始化Three.js核心组件
   useEffect(() => {
@@ -106,12 +103,12 @@ export function useThreeReact(containerRef) {
 
     // 初始化透视相机
     cameraRef.current = new THREE.PerspectiveCamera(
-      60, // 视野角度（FOV），较大的角度可以显示更多场景内容
+      45, // 视野角度（FOV），较大的角度可以显示更多场景内容
       containerRef.current.clientWidth / containerRef.current.clientHeight, // 宽高比
       0.1, // 近裁剪平面
-      1000 // 远裁剪平面
+      10000 // 远裁剪平面
     );
-    cameraRef.current.position.set(-15, 40, 15); // 设置相机初始位置（x,y,z）
+    cameraRef.current.position.set(-15, 80, 15); // 设置相机初始位置（x,y,z）
     cameraRef.current.lookAt(0, 0, 0); // 相机看向原点
 
     // 初始化WebGL渲染器
@@ -174,9 +171,9 @@ export function useThreeReact(containerRef) {
 
     // 添加坐标轴辅助器（X轴红色，Y轴绿色，Z轴蓝色）
     axesHelperRef.current = new THREE.AxesHelper(5);
-    if (showAxes) {
-      sceneRef.current.add(axesHelperRef.current);
-    }
+    // if (showAxes) {
+    //   sceneRef.current.add(axesHelperRef.current);
+    // }
 
     // 窗口大小改变时调整相机和渲染器
     const handleResize = () => {
@@ -421,7 +418,7 @@ export function useThreeReact(containerRef) {
    * @returns {Promise<Object>} 加载的模型对象
    */
   const loadOBJModel = async (path, mtlPath = null, options = {}) => {
-    const { position = [0, 0, 0], scale = [0.01, 0.01, 0.01], rotation = [0, 0, 0], name = '' } = options;
+    const { position = [0, 0, 0], scale = [1, 1, 1], rotation = [0, 0, 0], name = '' } = options;
     
     setLoading(true);
     try {
@@ -441,7 +438,7 @@ export function useThreeReact(containerRef) {
       object.position.set(...position); // 设置位置
       object.scale.set(...scale); // 设置缩放
       object.rotation.set(...rotation); // 设置旋转
-      console.log({object})
+      
       // 添加到场景
       sceneRef.current.add(object);
       
@@ -540,7 +537,6 @@ export function useThreeReact(containerRef) {
    * @param {Number} padding - 额外的边距比例，默认为0.2（20%）
    */
   const fitModelsToView = useCallback((modelsToFit = models, padding = 0.2) => {
-    console.log({fitModelsToView})
     if (!cameraRef.current || !controlsRef.current || (!modelsToFit || modelsToFit.length === 0)) {
       console.log('FitModelsToView: 相机、控制器或模型为空，无法调整视角');
       return;
@@ -566,7 +562,7 @@ export function useThreeReact(containerRef) {
 
     // 计算包围盒的中心
     const center = boundingBox.getCenter(new THREE.Vector3());
-    console.log({center})
+    
     // 计算包围盒的尺寸
     const size = boundingBox.getSize(new THREE.Vector3());
     
@@ -615,7 +611,7 @@ export function useThreeReact(containerRef) {
     controls: controlsRef.current, // 轨道控制器实例
     isReady, // 场景是否初始化完成
     loading, // 是否正在加载资源
-    showAxes, // 是否显示坐标轴辅助器
+    // showAxes, // 是否显示坐标轴辅助器
     models, // 已加载的模型列表
     composers: composers.current, // 后处理合成器映射表
     mixers: mixers.current, // 动画混合器数组

@@ -175,32 +175,32 @@ export default function MultiModelThreeReact() {
     // 原有模型 - 保持不变
     {
       id: 'substation',
-      path: '/assets/substation_ht_1005_01.obj',
-      mtlPath: '/assets/substation_ht_1005_01.mtl',
+      path: '/assets/powerPlant/substation_ht_1005_01.obj',
+      mtlPath: '/assets/powerPlant/substation_ht_1005_01.mtl',
       position: [10, 0, -50],
       scale: [0.05, 0.05, 0.05],
       name: '厂区围墙'
     },
     {
       id: 'train',
-      path: '/assets/train_1005_01.obj',
-      mtlPath: '/assets/train_1005_01.mtl',
+      path: '/assets/powerPlant/train_1005_01.obj',
+      mtlPath: '/assets/powerPlant/train_1005_01.mtl',
       position: [8, -0.5, -29],
       scale: [0.03, 0.03, 0.03],
       name: '运输车辆'
     },
     {
       id: 'electricTower',
-      path: '/assets/electric_tower_1005_01.obj',
-      mtlPath: '/assets/electric_tower_1005_01.mtl',
+      path: '/assets/powerPlant/electric_tower_1005_01.obj',
+      mtlPath: '/assets/powerPlant/electric_tower_1005_01.mtl',
       position: [25, 0, -85],
       scale: [0.1, 0.1, 0.1],
       name: '变电站主体'
     },
     {
       id: 'transformer1',
-      path: '/assets/transformer_1005_01_01.obj',
-      mtlPath: '/assets/transformer_1005_01_01.mtl',
+      path: '/assets/powerPlant/transformer_1005_01_01.obj',
+      mtlPath: '/assets/powerPlant/transformer_1005_01_01.mtl',
       position: [39.2, 0, 66.9], // 调整位置以适应旋转后的视觉效果
       scale: [0.5, 0.5, 0.5],
       rotation: [0, -Math.PI/2, 0], // 水平方向顺时针旋转90度
@@ -208,8 +208,8 @@ export default function MultiModelThreeReact() {
     },
     {
       id: 'transformer',
-      path: '/assets/transformer_1005_01_01.obj',
-      mtlPath: '/assets/transformer_1005_01_01.mtl',
+      path: '/assets/powerPlant/transformer_1005_01_01.obj',
+      mtlPath: '/assets/powerPlant/transformer_1005_01_01.mtl',
       position: [33.5, 0, 66.9], // 调整位置以适应旋转后的视觉效果
       scale: [0.5, 0.5, 0.5],
       rotation: [0, -Math.PI/2, 0], // 水平方向顺时针旋转90度
@@ -218,40 +218,40 @@ export default function MultiModelThreeReact() {
     // 新增模型 - substation_ht_1005系列补充
     {
       id: 'substation02',
-      path: '/assets/substation_ht_1005_02.obj',
-      mtlPath: '/assets/substation_ht_1005_02.mtl',
+      path: '/assets/powerPlant/substation_ht_1005_02.obj',
+      mtlPath: '/assets/powerPlant/substation_ht_1005_02.mtl',
       position: [10, 0, -50],
       scale: [0.05, 0.05, 0.05],
       name: '控电楼1'
     },
     {
       id: 'substation03',
-      path: '/assets/substation_ht_1005_03.obj',
-      mtlPath: '/assets/substation_ht_1005_03.mtl',
+      path: '/assets/powerPlant/substation_ht_1005_03.obj',
+      mtlPath: '/assets/powerPlant/substation_ht_1005_03.mtl',
       position: [10, 0, -50],
       scale: [0.05, 0.05, 0.05],
       name: '变电站建筑3'
     },
     {
       id: 'substation04',
-      path: '/assets/substation_ht_1005_04.obj',
-      mtlPath: '/assets/substation_ht_1005_04.mtl',
+      path: '/assets/powerPlant/substation_ht_1005_04.obj',
+      mtlPath: '/assets/powerPlant/substation_ht_1005_04.mtl',
       position: [10.1, 0, -50],
       scale: [0.05, 0.05, 0.05],
       name: '变电站建筑4'
     },
     // {
     //   id: 'substation05plus1',
-    //   path: '/assets/substation_ht_1005_05-.obj',
-    //   mtlPath: '/assets/substation_ht_1005_05-.mtl',
+    //   path: '/assets/powerPlant/substation_ht_1005_05-.obj',
+    //   mtlPath: '/assets/powerPlant/substation_ht_1005_05-.mtl',
     //   position: [1, 0, -55],
     //   scale: [0.05, 0.05, 0.05],
     //   name: '变电站扩展建筑5-'
     // },
     {
       id: 'substation05',
-      path: '/assets/substation_ht_1005_05.obj',
-      mtlPath: '/assets/substation_ht_1005_05.mtl',
+      path: '/assets/powerPlant/substation_ht_1005_05.obj',
+      mtlPath: '/assets/powerPlant/substation_ht_1005_05.mtl',
       position: [-16.5, 0, 37.5],
       scale: [0.05, 0.05, 0.05],
       rotation: [0, Math.PI, 0], // 水平方向顺时针旋转90度
@@ -259,8 +259,8 @@ export default function MultiModelThreeReact() {
     },
     {
       id: 'substation05-1',
-      path: '/assets/substation_ht_1005_05.obj',
-      mtlPath: '/assets/substation_ht_1005_05.mtl',
+      path: '/assets/powerPlant/substation_ht_1005_05.obj',
+      mtlPath: '/assets/powerPlant/substation_ht_1005_05.mtl',
       position: [-9.5, 0, 37.5],
       scale: [0.05, 0.05, 0.05],
       rotation: [0, Math.PI, 0], // 水平方向顺时针旋转90度
@@ -268,8 +268,8 @@ export default function MultiModelThreeReact() {
     },
     {
       id: 'substation05-2',
-      path: '/assets/substation_ht_1005_05.obj',
-      mtlPath: '/assets/substation_ht_1005_05.mtl',
+      path: '/assets/powerPlant/substation_ht_1005_05.obj',
+      mtlPath: '/assets/powerPlant/substation_ht_1005_05.mtl',
       position: [-16.5, 0, 45.5],
       scale: [0.05, 0.05, 0.05],
       rotation: [0, Math.PI, 0], // 水平方向顺时针旋转90度
@@ -277,8 +277,8 @@ export default function MultiModelThreeReact() {
     },
     {
       id: 'substation05-3',
-      path: '/assets/substation_ht_1005_05.obj',
-      mtlPath: '/assets/substation_ht_1005_05.mtl',
+      path: '/assets/powerPlant/substation_ht_1005_05.obj',
+      mtlPath: '/assets/powerPlant/substation_ht_1005_05.mtl',
       position: [-9.5, 0, 45.5],
       scale: [0.05, 0.05, 0.05],
       rotation: [0, Math.PI, 0], // 水平方向顺时针旋转90度
@@ -286,8 +286,8 @@ export default function MultiModelThreeReact() {
     },
     // {
     //   id: 'substation05plus',
-    //   path: '/assets/substation_ht_1005_05+.obj',
-    //   mtlPath: '/assets/substation_ht_1005_05+.mtl',
+    //   path: '/assets/powerPlant/substation_ht_1005_05+.obj',
+    //   mtlPath: '/assets/powerPlant/substation_ht_1005_05+.mtl',
     //   position: [1, 0, -55],
     //   scale: [0.05, 0.05, 0.05],
     //   rotation: [0, Math.PI, 0], // 水平方向顺时针旋转90度
@@ -295,24 +295,24 @@ export default function MultiModelThreeReact() {
     // },
     // {
     //   id: 'substation06',
-    //   path: '/assets/substation_ht_1005_06.obj',
-    //   mtlPath: '/assets/substation_ht_1005_06.mtl',
+    //   path: '/assets/powerPlant/substation_ht_1005_06.obj',
+    //   mtlPath: '/assets/powerPlant/substation_ht_1005_06.mtl',
     //   position: [50, 0, -50],
     //   scale: [0.1, 0.1, 0.1],
     //   name: '变电站建筑6'
     // },
     // {
     //   id: 'substation07',
-    //   path: '/assets/substation_ht_1005_07.obj',
-    //   mtlPath: '/assets/substation_ht_1005_07.mtl',
+    //   path: '/assets/powerPlant/substation_ht_1005_07.obj',
+    //   mtlPath: '/assets/powerPlant/substation_ht_1005_07.mtl',
     //   position: [-30, 0, -50],
     //   scale: [0.05, 0.05, 0.05],
     //   name: 'Y形柱子'
     // },
     // {
     //   id: 'substation08',
-    //   path: '/assets/substation_ht_1005_08.obj',
-    //   mtlPath: '/assets/substation_ht_1005_08.mtl',
+    //   path: '/assets/powerPlant/substation_ht_1005_08.obj',
+    //   mtlPath: '/assets/powerPlant/substation_ht_1005_08.mtl',
     //   position: [10, 0, -90],
     //   scale: [0.1, 0.1, 0.1],
     //   name: '电杆'
@@ -320,24 +320,24 @@ export default function MultiModelThreeReact() {
     // 一组
     {
       id: 'substation09-1',
-      path: '/assets/substation_ht_1005_09.obj',
-      mtlPath: '/assets/substation_ht_1005_09.mtl',
+      path: '/assets/powerPlant/substation_ht_1005_09.obj',
+      mtlPath: '/assets/powerPlant/substation_ht_1005_09.mtl',
       position: [5, 0, -59],
       scale: [0.05, 0.05, 0.05],
       name: '变电站建筑9'
     },
     {
       id: 'substation10-1',
-      path: '/assets/substation_ht_1005_10.obj',
-      mtlPath: '/assets/substation_ht_1005_10.mtl',
+      path: '/assets/powerPlant/substation_ht_1005_10.obj',
+      mtlPath: '/assets/powerPlant/substation_ht_1005_10.mtl',
       position: [7, 0, -58],
       scale: [0.05, 0.05, 0.05],
       name: '变电站建筑10'
     },
     {
       id: 'substation09-2',
-      path: '/assets/substation_ht_1005_09.obj',
-      mtlPath: '/assets/substation_ht_1005_09.mtl',
+      path: '/assets/powerPlant/substation_ht_1005_09.obj',
+      mtlPath: '/assets/powerPlant/substation_ht_1005_09.mtl',
       position: [9, 0, -59],
       scale: [0.05, 0.05, 0.05],
       name: '变电站建筑9'
@@ -345,24 +345,24 @@ export default function MultiModelThreeReact() {
     // 一组
     {
       id: 'substation09-3',
-      path: '/assets/substation_ht_1005_09.obj',
-      mtlPath: '/assets/substation_ht_1005_09.mtl',
+      path: '/assets/powerPlant/substation_ht_1005_09.obj',
+      mtlPath: '/assets/powerPlant/substation_ht_1005_09.mtl',
       position: [5, 0, -60],
       scale: [0.05, 0.05, 0.05],
       name: '变电站建筑9'
     },
     {
       id: 'substation10-2',
-      path: '/assets/substation_ht_1005_10.obj',
-      mtlPath: '/assets/substation_ht_1005_10.mtl',
+      path: '/assets/powerPlant/substation_ht_1005_10.obj',
+      mtlPath: '/assets/powerPlant/substation_ht_1005_10.mtl',
       position: [7, 0, -59],
       scale: [0.05, 0.05, 0.05],
       name: '变电站建筑10'
     },
     {
       id: 'substation09-4',
-      path: '/assets/substation_ht_1005_09.obj',
-      mtlPath: '/assets/substation_ht_1005_09.mtl',
+      path: '/assets/powerPlant/substation_ht_1005_09.obj',
+      mtlPath: '/assets/powerPlant/substation_ht_1005_09.mtl',
       position: [9, 0, -60],
       scale: [0.05, 0.05, 0.05],
       name: '变电站建筑9'
@@ -370,24 +370,24 @@ export default function MultiModelThreeReact() {
     // 一组
     {
       id: 'substation09-5',
-      path: '/assets/substation_ht_1005_09.obj',
-      mtlPath: '/assets/substation_ht_1005_09.mtl',
+      path: '/assets/powerPlant/substation_ht_1005_09.obj',
+      mtlPath: '/assets/powerPlant/substation_ht_1005_09.mtl',
       position: [5, 0, -61],
       scale: [0.05, 0.05, 0.05],
       name: '变电站建筑9'
     },
     {
       id: 'substation10-3',
-      path: '/assets/substation_ht_1005_10.obj',
-      mtlPath: '/assets/substation_ht_1005_10.mtl',
+      path: '/assets/powerPlant/substation_ht_1005_10.obj',
+      mtlPath: '/assets/powerPlant/substation_ht_1005_10.mtl',
       position: [7, 0, -60],
       scale: [0.05, 0.05, 0.05],
       name: '变电站建筑10'
     },
     {
       id: 'substation09-6',
-      path: '/assets/substation_ht_1005_09.obj',
-      mtlPath: '/assets/substation_ht_1005_09.mtl',
+      path: '/assets/powerPlant/substation_ht_1005_09.obj',
+      mtlPath: '/assets/powerPlant/substation_ht_1005_09.mtl',
       position: [9, 0, -61],
       scale: [0.05, 0.05, 0.05],
       name: '变电站建筑9'
@@ -395,24 +395,24 @@ export default function MultiModelThreeReact() {
     // 一组
     {
       id: 'substation09-7',
-      path: '/assets/substation_ht_1005_09.obj',
-      mtlPath: '/assets/substation_ht_1005_09.mtl',
+      path: '/assets/powerPlant/substation_ht_1005_09.obj',
+      mtlPath: '/assets/powerPlant/substation_ht_1005_09.mtl',
       position: [5, 0, -51],
       scale: [0.05, 0.05, 0.05],
       name: '变电站建筑9'
     },
     {
       id: 'substation10-4',
-      path: '/assets/substation_ht_1005_10.obj',
-      mtlPath: '/assets/substation_ht_1005_10.mtl',
+      path: '/assets/powerPlant/substation_ht_1005_10.obj',
+      mtlPath: '/assets/powerPlant/substation_ht_1005_10.mtl',
       position: [7, 0, -50],
       scale: [0.05, 0.05, 0.05],
       name: '变电站建筑10'
     },
     {
       id: 'substation09-8',
-      path: '/assets/substation_ht_1005_09.obj',
-      mtlPath: '/assets/substation_ht_1005_09.mtl',
+      path: '/assets/powerPlant/substation_ht_1005_09.obj',
+      mtlPath: '/assets/powerPlant/substation_ht_1005_09.mtl',
       position: [9, 0, -51],
       scale: [0.05, 0.05, 0.05],
       name: '变电站建筑9'
@@ -420,24 +420,24 @@ export default function MultiModelThreeReact() {
     // 一组
     {
       id: 'substation09-9',
-      path: '/assets/substation_ht_1005_09.obj',
-      mtlPath: '/assets/substation_ht_1005_09.mtl',
+      path: '/assets/powerPlant/substation_ht_1005_09.obj',
+      mtlPath: '/assets/powerPlant/substation_ht_1005_09.mtl',
       position: [5, 0, -52],
       scale: [0.05, 0.05, 0.05],
       name: '变电站建筑9'
     },
     {
       id: 'substation10-5',
-      path: '/assets/substation_ht_1005_10.obj',
-      mtlPath: '/assets/substation_ht_1005_10.mtl',
+      path: '/assets/powerPlant/substation_ht_1005_10.obj',
+      mtlPath: '/assets/powerPlant/substation_ht_1005_10.mtl',
       position: [7, 0, -51],
       scale: [0.05, 0.05, 0.05],
       name: '变电站建筑10'
     },
     {
       id: 'substation09-10',
-      path: '/assets/substation_ht_1005_09.obj',
-      mtlPath: '/assets/substation_ht_1005_09.mtl',
+      path: '/assets/powerPlant/substation_ht_1005_09.obj',
+      mtlPath: '/assets/powerPlant/substation_ht_1005_09.mtl',
       position: [9, 0, -52],
       scale: [0.05, 0.05, 0.05],
       name: '变电站建筑9'
@@ -445,24 +445,24 @@ export default function MultiModelThreeReact() {
     // 一组
     {
       id: 'substation09-11',
-      path: '/assets/substation_ht_1005_09.obj',
-      mtlPath: '/assets/substation_ht_1005_09.mtl',
+      path: '/assets/powerPlant/substation_ht_1005_09.obj',
+      mtlPath: '/assets/powerPlant/substation_ht_1005_09.mtl',
       position: [5, 0, -53],
       scale: [0.05, 0.05, 0.05],
       name: '变电站建筑9'
     },
     {
       id: 'substation10-6',
-      path: '/assets/substation_ht_1005_10.obj',
-      mtlPath: '/assets/substation_ht_1005_10.mtl',
+      path: '/assets/powerPlant/substation_ht_1005_10.obj',
+      mtlPath: '/assets/powerPlant/substation_ht_1005_10.mtl',
       position: [7, 0, -52],
       scale: [0.05, 0.05, 0.05],
       name: '变电站建筑10'
     },
     {
       id: 'substation09-12',
-      path: '/assets/substation_ht_1005_09.obj',
-      mtlPath: '/assets/substation_ht_1005_09.mtl',
+      path: '/assets/powerPlant/substation_ht_1005_09.obj',
+      mtlPath: '/assets/powerPlant/substation_ht_1005_09.mtl',
       position: [9, 0, -53],
       scale: [0.05, 0.05, 0.05],
       name: '变电站建筑9'
@@ -472,7 +472,7 @@ export default function MultiModelThreeReact() {
   const glbObj = [
     {
       id: 'base',
-      path: '/assets/base.glb',
+      path: '/assets/powerPlant/base.glb',
       position: [0, 0, 0],
       rotation: [0, 0, 0],
       scale: [0.5, 0.5, 0.5],
@@ -482,7 +482,7 @@ export default function MultiModelThreeReact() {
     },
     {
       id: 'devices',
-      path: '/assets/devices.glb',
+      path: '/assets/powerPlant/devices.glb',
       position: [0, 0, 0],
       rotation: [0, 0, 0],
       scale: [1, 1, 1],
@@ -492,7 +492,7 @@ export default function MultiModelThreeReact() {
     // gltf 模型
     {
       id: 'lines',
-      path: '/assets/lines.gltf',
+      path: '/assets/powerPlant/lines.gltf',
       position: [0, 0, 0],
       rotation: [0, 0, 0],
       scale: [1, 1, 1],

@@ -61,7 +61,7 @@ export function useThreeReact(containerRef) {
   const { ambientIntensity, directionalIntensity, showAxes } = useControls({
     ambientIntensity: { value: 1.2, min: 0, max: 2, step: 0.1 }, // 环境光强度
     directionalIntensity: { value: 2, min: 0, max: 3, step: 0.1 }, // 方向光强度
-    showAxes: false // 是否显示坐标轴辅助器
+    showAxes: true // 是否显示坐标轴辅助器
   });
 
   // 监听光照强度变化并更新场景

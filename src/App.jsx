@@ -24,6 +24,7 @@ import mapCenterPoint from '@/assetsFile/img/mapCenterPoint.png'
 import mapPoint from '@/assetsFile/img/mapPoint.png'
 import mapImg from '@/assetsFile/img/mapImg.jpg'
 import { newMultModels } from './config'
+import MfModel from './components/MFModel'
 
 function App() {
   // const [selectedViewer, setSelectedViewer] = useState('mult')

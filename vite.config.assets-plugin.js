@@ -41,7 +41,7 @@ export const createAssetPathPlugin = () => {
           // 检查是否有硬编码的'/assets/'路径引用
           if (chunk.code.includes('/assets/') && !isDev) {
             // 将所有剩余的'/assets/'替换为相对路径格式
-            chunk.code = chunk.code.replace(/\/assets\//g, 'assets/');
+            chunk.code = chunk.code.replace(/\/assets\//g, '/assets/');
           }
         }
       }

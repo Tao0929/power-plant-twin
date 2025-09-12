@@ -81,7 +81,7 @@ button:focus-visible {
   height: calc(100%);
   background-color: #09284f;
   /* background-color: #05326a; */
-  background-image: url(@/assetsFile/images/grid_bg_01.png);
+  background-image: url(@/constantFile/images/grid_bg_01.png);
   background-repeat: repeat;
 }
 .windMainMiddle {

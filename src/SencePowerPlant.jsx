@@ -2,16 +2,16 @@
 import { useEffect, useRef, useState } from 'react'
 import { FullScreenContainer, BorderBox1, BorderBox11, BorderBox10, BorderBox13, BorderBox8, BorderBox5, BorderBox7, BorderBox9, Decoration1, Decoration5, ActiveRingChart, ScrollRankingBoard, ConicalColumnChart, Decoration3, FlylineChart, FlylineChartEnhanced, ScrollBoard, CapsuleChart, DigitalFlop, BorderBox2, Decoration9, } from '@jiaminghi/data-view-react'
 import MultiModelThreeReact from './components/MultiModelThreeReact'
-import img1 from '@/assetsFile/img/1st.png'
-import img2 from '@/assetsFile/img/2st.png'
-import img3 from '@/assetsFile/img/3st.png'
-import img4 from '@/assetsFile/img/4st.png'
-import img5 from '@/assetsFile/img/5st.png'
-import img6 from '@/assetsFile/img/6st.png'
-import img7 from '@/assetsFile/img/7st.png'
-import mapCenterPoint from '@/assetsFile/img/mapCenterPoint.png'
-import mapPoint from '@/assetsFile/img/mapPoint.png'
-import mapImg from '@/assetsFile/img/mapImg.jpg'
+import img1 from '@/constantFile/img/1st.png'
+import img2 from '@/constantFile/img/2st.png'
+import img3 from '@/constantFile/img/3st.png'
+import img4 from '@/constantFile/img/4st.png'
+import img5 from '@/constantFile/img/5st.png'
+import img6 from '@/constantFile/img/6st.png'
+import img7 from '@/constantFile/img/7st.png'
+import mapCenterPoint from '@/constantFile/img/mapCenterPoint.png'
+import mapPoint from '@/constantFile/img/mapPoint.png'
+import mapImg from '@/constantFile/img/mapImg.jpg'
 
 function App() {
   const objModelList =  [
@@ -613,7 +613,7 @@ function App() {
     },
     k: 0.5,
     bgImgSrc: mapImg
-    // bgImgSrc: '/assetsFile/mapImg.jpg'
+    // bgImgSrc: '/constantFile/mapImg.jpg'
   }
 
   const left3Config = {

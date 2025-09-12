@@ -54,8 +54,8 @@ function App() {
         >
           <div className="absolute inset-0 bg-gradient-to-br from-blue-600/20 to-purple-800/20 z-10 group-hover:opacity-70 transition-opacity duration-300"></div>
           <img 
-            // src={'/assets/model1.png'} 
-            src={Model1Img} 
+            src={'/assets/model1.png'} 
+            // src={Model1Img} 
             alt="电站模型" 
             className="w-full h-96 object-cover transform transition-transform duration-700 group-hover:scale-110"
           />
@@ -75,8 +75,8 @@ function App() {
         >
           <div className="absolute inset-0 bg-gradient-to-br from-violet-600/20 to-fuchsia-800/20 z-10 group-hover:opacity-70 transition-opacity duration-300"></div>
           <img 
-            src={Model2Img} 
-            // src={'/assets/model2.png'} 
+            // src={Model2Img} 
+            src={'/assets/model2.png'} 
             alt="风电模型" 
             className="w-full h-96 object-cover transform transition-transform duration-700 group-hover:scale-110"
           />

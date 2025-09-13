@@ -73,7 +73,7 @@ function WidgetPanel04(props) {
     const ListItem = ({item}) => {
         return (
             <div className={`${styles.item} ${item.status ? styles.error : ''}`}>
-                <div className={`${styles.icon} ${styles[item.icon]}`}></div>
+                {/* <div className={`${styles.icon} ${styles[item.icon]}`}></div> */}
                 <div className={styles.label}>{item.label}</div>
                 <div className={styles.key}>
                     <span className={styles.value}>{item.value}</span>
@@ -82,6 +82,7 @@ function WidgetPanel04(props) {
                 {/* {item.status && (
                     <FontAwesomeIcon icon={faTriangleExclamation} className={styles.alert} />
                 )} */}
+                {/* <i  className={`fa-solid fa-triangle-exclamation ${styles.alert}`}></i> */}
             </div>
         );
     };
@@ -89,8 +90,8 @@ function WidgetPanel04(props) {
         <LayoutPanel title={title} children={
             <div className={styles.container}>
             {
-              source.map(item => (
-                <ListItem key={item.id} item={item} />
+              source.map((item, index) => (
+                <ListItem key={`${item.name}-${(index+ new Date().getDate())}`} item={item} />
                 ))
             }
             </div>

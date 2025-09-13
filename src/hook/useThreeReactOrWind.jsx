@@ -184,7 +184,10 @@ export function useThreeReactOrWind(containerRef) {
       
       cameraRef.current.aspect = width / height; // 更新相机宽高比
       cameraRef.current.updateProjectionMatrix(); // 更新相机投影矩阵
+      cssRendererRef.current.setSize(width, height); // 调整CSS2D渲染器大小
       rendererRef.current.setSize(width, height); // 调整渲染器大小
+      // 更新控制器
+      controlsRef.current.update();
     };
 
     // 空格键按下事件处理函数
@@ -274,13 +277,13 @@ export function useThreeReactOrWind(containerRef) {
       animationIdRef.current = requestAnimationFrame(animate);
       
       // 获取时间增量（自上次调用以来经过的时间）
-      const delta = clock.current.getDelta();
+      const mixerUpdateDelta = clock.current.getDelta();
       
       // 更新控制器
       controlsRef.current.update();
       
       // 更新动画混合器（用于模型动画）
-      mixers.current.forEach((mixer) => mixer.update(delta));
+      mixers.current.forEach((mixer) => mixer.update(mixerUpdateDelta));
       
       // 更新自定义渲染混入函数
       renderMixins.current.forEach((mixin) => {
@@ -297,6 +300,7 @@ export function useThreeReactOrWind(containerRef) {
       cssRendererRef.current.render(sceneRef.current, cameraRef.current);
       
       // 渲染后处理效果
+      const delta = new THREE.Clock().getDelta()
       composers.current.forEach((composer) => composer.render(delta));
     };
 
